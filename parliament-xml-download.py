@@ -55,7 +55,7 @@ def set_ons_proxies(ssl=False):
 
 
 #input data
-hansardlinks_xlsx = "//NDATA9/corber$/Desktop/Development/uk-parliament-stats/data/hansard-link-prep.xlsx"
+hansardlinks_xlsx = "data/hansard-link-prep.xlsx"
 
 #read in hansard xlsx & pull into dataframe - append sheetname as additional column
 hansardlinks_sheetnames = pd.read_excel(hansardlinks_xlsx, sheet_name=None)
@@ -66,15 +66,11 @@ for tab_name, df in hansardlinks_sheetnames.items():
     all_dfs.append(df)
 hansardlinks = pd.concat(all_dfs, ignore_index=True)
 
-#cut down hansardlinks to relevant commons debates files
-
-testdownload = hansardlinks[hansardlinks['type'] == "commons_debates"]
-
-testdownload = testdownload.tail(2) 
+#cut down hansardlinks to approx half of files to be downloaded
+testdownload = hansardlinks.head(3500) 
 
 
-
-#download relevant URLs -- expand this section to loop through list and download with correct name. ADD IN 30-60 SEC DELAY BETWEEN DOWNLOADS.
+#download relevant URLs
 
 totalfilestodownload = len(testdownload)
 downloadcounter = 1
@@ -88,15 +84,3 @@ for index, row in testdownload.iterrows():
     print("downloaded file from: "+ row['url'] + "to: c:/users/corber/downloads/uk-plt-xml/" + row['filename'])
     downloadcounter = downloadcounter + 1
     time.sleep(15) #waits 15sec - to avoid rate limiting
-
-
-
-
-
-
-#url = "https://www.theyworkforyou.com/pwdata/scrapedxml/sp-new/covid-19-committee/2020-04-24_12614.xml"
-
-
-#myfile = requests.get(url, proxies=proxies, verify=True)
-
-#open('c:/users/corber/downloads/uk-plt-xml/test.xml', 'wb').write(myfile.content)
