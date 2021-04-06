@@ -46,12 +46,11 @@ matchedrows["date"] = pd.to_datetime(matchedrows["date"])
 #extract year & week from the date
 matchedrows["year"] = matchedrows["date"].dt.year
 matchedrows["weeknum"] = matchedrows["date"].dt.week
- 
-#create year specific week variable (e.g. 2015-03), if weeknum <10 then include a '0' when creating str 
-##if matchedrows.loc[matchedrows["weeknum"]] < 10:
-   ## matchedrows["week"] = matchedrows["year"].astype(str) + "-0" + matchedrows["weeknum"].astype(str)
-##else:
-   ## matchedrows["week"] = matchedrows["year"].astype(str) + "-" + matchedrows["weeknum"].astype(str)
+
+#force two figures in weeknum, e.g. '5' -> '05', so that ordering can be done using week var created below
+matchedrows["weeknum"] = matchedrows["weeknum"].apply(lambda x: '{0:0>2}'.format(x))
+
+#create year specific week variable (e.g. 2015-03)
 matchedrows["week"] = matchedrows["year"].astype(str) + "-" + matchedrows["weeknum"].astype(str)
 
 #calculate mention frequency per week
