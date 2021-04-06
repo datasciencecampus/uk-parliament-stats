@@ -3,33 +3,58 @@
 Created on Tue Apr  6 14:17:20 2021
 
 @author: corber
+
+Issues:
+    - what if >1 item in single speech? Should this be counted multiple times?
+
+Next steps:
+    - find location of match & take 50 words before/after as short context for dashboard
+        -> what if multiple matches?
+    - tf-idf for topic -> do this by debate title or speeches within debates?
+
 """
 
-#libraries
+
+# --- Libraries ---
 import pandas as pd
 
 
-#variables
+# --- Variables ---
+
+#parliament speech data
 inputfile = "D:/uk-parliament-data/commonsdebates_2015_2019-utf8.csv"
+
+#keywords to search for in speeches
 keywords = ["ONS","Office for National Statistics", "Office of National Statistics", "UKSA", "UK Statistics Authority"]
 
-#analysis
+
+# --- Analysis ---
 df = pd.read_csv(inputfile)
 
-#group keywords together, use '|' to separate and allow str.contains function to parse as logical OR
+#group keywords together, use '|' to separate and allow str.contains function to parse as logical OR (function accepts regex pattern)
 keywords_combined = '|'.join(keywords)
 
-#create T/F flag in 'match' for any speeches that contain keywords, NOT case sensitive.
-df["match"] = df["text"].str.contains(keywords_combined, case=False)
+#create T/F flag in 'match' for any speeches that contain keywords - case sensitive (as otherwise 'ons' will match on a LOT).
+df["match"] = df["text"].str.contains(keywords_combined)
 
 #filter df to only contain rows with mentions
 matchedrows = df[df["match"] == True]
 
-##setup keyword list
-## does case matter? check for this in comparison function description
-##search speeches for keyword - flag if speech contains item in list (what if >1 item in single speech?)
-##group by week 
-##sum count flag in week
-##expand: take 50 words before & after keyword location in text -> 'context' var
+#convert date from object to datetime
+matchedrows["date"] = pd.to_datetime(matchedrows["date"])
 
-##tf-idf for topic -> do this within each debate?
+#extract year & week from the date
+matchedrows["year"] = matchedrows["date"].dt.year
+matchedrows["weeknum"] = matchedrows["date"].dt.week
+ 
+#create year specific week variable (e.g. 2015-03), if weeknum <10 then include a '0' when creating str 
+##if matchedrows.loc[matchedrows["weeknum"]] < 10:
+   ## matchedrows["week"] = matchedrows["year"].astype(str) + "-0" + matchedrows["weeknum"].astype(str)
+##else:
+   ## matchedrows["week"] = matchedrows["year"].astype(str) + "-" + matchedrows["weeknum"].astype(str)
+matchedrows["week"] = matchedrows["year"].astype(str) + "-" + matchedrows["weeknum"].astype(str)
+
+#calculate mention frequency per week
+mention_frequency = matchedrows.groupby(matchedrows["week"]).size()
+
+print(mention_frequency.head(20))
