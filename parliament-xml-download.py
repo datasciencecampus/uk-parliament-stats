@@ -11,6 +11,7 @@ set_ons_proxies function by Mitchell Edmunds@ONS
 import pandas as pd
 import requests
 import time
+import os.path
 
 #set ONS proxy function
 
@@ -31,7 +32,7 @@ def set_ons_proxies(ssl=False):
         "http://CR2-PSG-DMZ-VIP:8080",
     ]
 
-    test_url = "https://www.ons.gov.uk/"
+    test_url = "https://www.google.co.uk/"
     stop_at = len(proxy_list)-1    
     
     for i, proxy in enumerate(proxy_list):
@@ -75,12 +76,18 @@ testdownload = hansardlinks.head(3500)
 totalfilestodownload = len(testdownload)
 downloadcounter = 1
 
-proxies = set_ons_proxies(ssl=True)
 
 for index, row in testdownload.iterrows():
-    print("downloading item " + str(downloadcounter) + " of " + str(totalfilestodownload))
-    myfile = requests.get(row['url'], proxies=proxies, verify=True)
-    open('c:/users/corber/downloads/uk-plt-xml/'+row['filename'], 'wb').write(myfile.content)
-    print("downloaded file from: "+ row['url'] + "to: c:/users/corber/downloads/uk-plt-xml/" + row['filename'])
-    downloadcounter = downloadcounter + 1
-    time.sleep(15) #waits 15sec - to avoid rate limiting
+    print("Item " + str(downloadcounter) + " ["+row['filename']+"] of " + str(totalfilestodownload))
+    if os.path.isfile('c:/users/corber/downloads/uk-plt-xml/'+row['filename']) == True:
+       print("file already exists - skipping to next file\n")
+       downloadcounter = downloadcounter + 1
+    else:
+        proxies = set_ons_proxies(ssl=True) #find working proxy 
+        print("downloading item " + str(downloadcounter) + " of " + str(totalfilestodownload))
+        myfile = requests.get(row['url'], proxies=proxies, verify=True)
+        open('c:/users/corber/downloads/uk-plt-xml/'+row['filename'], 'wb').write(myfile.content)
+        print("downloaded file from: "+ row['url'] + "\n to: c:/users/corber/downloads/uk-plt-xml/" + row['filename']+'\n')
+        downloadcounter = downloadcounter + 1
+        time.sleep(15) #waits 15sec - to avoid rate limiting
+
