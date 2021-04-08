@@ -10,8 +10,10 @@ set_ons_proxies function by Mitchell Edmunds@ONS
 #libraries
 import pandas as pd
 import requests
+from requests.exceptions import ProxyError
 import time
 import os.path
+
 
 #set ONS proxy function
 
@@ -78,11 +80,22 @@ downloadcounter = 1
 
 
 for index, row in testdownload.iterrows():
-    print("Item " + str(downloadcounter) + " ["+row['filename']+"] of " + str(totalfilestodownload))
-    if os.path.isfile('c:/users/corber/downloads/uk-plt-xml/'+row['filename']) == True:
-       print("file already exists - skipping to next file\n")
-       downloadcounter = downloadcounter + 1
-    else:
+    try:
+        print("Item " + str(downloadcounter) + " ["+row['filename']+"] of " + str(totalfilestodownload))
+        if os.path.isfile('c:/users/corber/downloads/uk-plt-xml/'+row['filename']) == True:
+           print("file already exists - skipping to next file\n")
+           downloadcounter = downloadcounter + 1
+        else:
+            proxies = set_ons_proxies(ssl=True) #find working proxy 
+            print("downloading item " + str(downloadcounter) + " of " + str(totalfilestodownload))
+            myfile = requests.get(row['url'], proxies=proxies, verify=True)
+            open('c:/users/corber/downloads/uk-plt-xml/'+row['filename'], 'wb').write(myfile.content)
+            print("downloaded file from: "+ row['url'] + "\n to: c:/users/corber/downloads/uk-plt-xml/" + row['filename']+'\n')
+            downloadcounter = downloadcounter + 1
+            time.sleep(15) #waits 15sec - to avoid rate limiting
+    except ProxyError:
+        print("<<< No proxies worked - waiting 90 seconds then re-trying >>>")
+        time.sleep(90) #wait 90sec - then re-try
         proxies = set_ons_proxies(ssl=True) #find working proxy 
         print("downloading item " + str(downloadcounter) + " of " + str(totalfilestodownload))
         myfile = requests.get(row['url'], proxies=proxies, verify=True)
@@ -90,4 +103,3 @@ for index, row in testdownload.iterrows():
         print("downloaded file from: "+ row['url'] + "\n to: c:/users/corber/downloads/uk-plt-xml/" + row['filename']+'\n')
         downloadcounter = downloadcounter + 1
         time.sleep(15) #waits 15sec - to avoid rate limiting
-
