@@ -53,7 +53,24 @@ matchedrows["weeknum"] = matchedrows["weeknum"].apply(lambda x: '{0:0>2}'.format
 #create year specific week variable (e.g. 2015-03)
 matchedrows["week"] = matchedrows["year"].astype(str) + "-" + matchedrows["weeknum"].astype(str)
 
+
+
+
 #calculate mention frequency per week
-mention_frequency = matchedrows.groupby(matchedrows["week"]).size()
+mention_frequency = matchedrows.groupby(matchedrows["week"], as_index=False).size()
 
 print(mention_frequency.head(20))
+
+#calc mentions by party of speaker - proportional to party size?
+print(matchedrows.groupby(matchedrows["party"]).size())
+
+#calc mentions by speaker & sort descending
+print(matchedrows.groupby(matchedrows["speaker"]).size().sort_values(ascending=False))
+
+#calc mean/median speech length
+print(df.groupby('match', as_index=False)['terms'].mean())
+print(df.groupby('match', as_index=False)['terms'].median())
+
+#plot mentions over time
+mention_frequency.plot(x="week", y="size")
+

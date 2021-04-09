@@ -14,6 +14,9 @@ from requests.exceptions import ProxyError
 import time
 import os.path
 
+#set local path for desired download location
+localpath = 'c:/users/corber/downloads/uk-plt-xml/'
+
 
 #set ONS proxy function
 
@@ -69,37 +72,25 @@ for tab_name, df in hansardlinks_sheetnames.items():
     all_dfs.append(df)
 hansardlinks = pd.concat(all_dfs, ignore_index=True)
 
-#cut down hansardlinks to approx half of files to be downloaded
-testdownload = hansardlinks.head(3500) 
-
-
-#download relevant URLs
-
-totalfilestodownload = len(testdownload)
+#download XML files
+totalfilestodownload = len(hansardlinks)
 downloadcounter = 1
 
 
-for index, row in testdownload.iterrows():
+for index, row in hansardlinks.iterrows():
     try:
         print("Item " + str(downloadcounter) + " ["+row['filename']+"] of " + str(totalfilestodownload))
-        if os.path.isfile('c:/users/corber/downloads/uk-plt-xml/'+row['filename']) == True:
+        if os.path.isfile(localpath+row['filename']) == True:
            print("file already exists - skipping to next file\n")
            downloadcounter = downloadcounter + 1
         else:
             proxies = set_ons_proxies(ssl=True) #find working proxy 
             print("downloading item " + str(downloadcounter) + " of " + str(totalfilestodownload))
             myfile = requests.get(row['url'], proxies=proxies, verify=True)
-            open('c:/users/corber/downloads/uk-plt-xml/'+row['filename'], 'wb').write(myfile.content)
-            print("downloaded file from: "+ row['url'] + "\n to: c:/users/corber/downloads/uk-plt-xml/" + row['filename']+'\n')
+            open(localpath+row['filename'], 'wb').write(myfile.content)
+            print("downloaded file from: "+ row['url'] + "\n to: " + localpath + row['filename']+'\n')
             downloadcounter = downloadcounter + 1
             time.sleep(15) #waits 15sec - to avoid rate limiting
     except ProxyError:
         print("<<< No proxies worked - waiting 90 seconds then re-trying >>>")
         time.sleep(90) #wait 90sec - then re-try
-        proxies = set_ons_proxies(ssl=True) #find working proxy 
-        print("downloading item " + str(downloadcounter) + " of " + str(totalfilestodownload))
-        myfile = requests.get(row['url'], proxies=proxies, verify=True)
-        open('c:/users/corber/downloads/uk-plt-xml/'+row['filename'], 'wb').write(myfile.content)
-        print("downloaded file from: "+ row['url'] + "\n to: c:/users/corber/downloads/uk-plt-xml/" + row['filename']+'\n')
-        downloadcounter = downloadcounter + 1
-        time.sleep(15) #waits 15sec - to avoid rate limiting
