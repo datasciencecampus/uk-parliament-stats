@@ -17,6 +17,7 @@ Next steps:
 
 # --- Libraries ---
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 # --- Variables ---
@@ -55,18 +56,21 @@ matchedrows["week"] = matchedrows["year"].astype(str) + "-" + matchedrows["weekn
 #pull out context of mention from speech
 
 #split text up by words into list 
-matchedrows["text-split"] = matchedrows["text"].str.split(" ")
-matchedrows["keyword_location"] = matchedrows["text-split"].str.index("I")
+matchedrows["keyword_location"] = matchedrows["text"].str.find("Office for National Statistics")
 
-matchedrows["context"] = matchedrows["text-split"].str.slice(start = 0, stop = 10) ##works - will need to re-form string though
-
-
-matchedrows["keyword_location"] = matchedrows["text"].str.findall(keywords_combined) ##this returns keywords that have been found in list
+# matchedrows["context-start"] = matchedrows["keyword_location"]-10
+# matchedrows["context-stop"] = matchedrows["keyword_location"]+10
 
 
+# matchedrows["context"] = matchedrows["text"].str.slice(start = matchedrows["keyword_location"], stop = 10)
+
+
+# matchedrows["keyword_location"] = matchedrows["text"].str.findall(keywords_combined) ##this returns keywords that have been found in list
 
 
 
+
+# matchedrows["text-split"] = matchedrows["text"].str.split(" ") ##splits speech out into list of words - not ideal though, if keyword we're after is followed by punctuation it won't work?
 
 ##identify location of keyword  - first appearance only??
 ##extract everything -50 and +50 words in front & behind. cap at max (terms value) & min (0)
@@ -90,5 +94,5 @@ print(df.groupby('match', as_index=False)['terms'].median())
 #plot mentions over time
 mention_frequency.plot(x="week", y="size")
 
-#save plot as .png - in user engagement folder?
-
+#save plot as .png - in user engagement folder
+plt.savefig("user-engagement/frequency-of-mentions.png", dpi = 150)
