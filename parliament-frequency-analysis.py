@@ -27,7 +27,6 @@ inputfile = "D:/uk-parliament-data/commonsdebates_2015_2019-utf8.csv"
 #keywords to search for in speeches
 keywords = ["ONS","Office for National Statistics", "Office of National Statistics", "UKSA", "UK Statistics Authority"]
 
-
 # --- Analysis ---
 df = pd.read_csv(inputfile)
 
@@ -53,7 +52,24 @@ matchedrows["weeknum"] = matchedrows["weeknum"].apply(lambda x: '{0:0>2}'.format
 #create year specific week variable (e.g. 2015-03)
 matchedrows["week"] = matchedrows["year"].astype(str) + "-" + matchedrows["weeknum"].astype(str)
 
+#pull out context of mention from speech
 
+#split text up by words into list 
+matchedrows["text-split"] = matchedrows["text"].str.split(" ")
+matchedrows["keyword_location"] = matchedrows["text-split"].str.index("I")
+
+matchedrows["context"] = matchedrows["text-split"].str.slice(start = 0, stop = 10) ##works - will need to re-form string though
+
+
+matchedrows["keyword_location"] = matchedrows["text"].str.findall(keywords_combined) ##this returns keywords that have been found in list
+
+
+
+
+
+
+##identify location of keyword  - first appearance only??
+##extract everything -50 and +50 words in front & behind. cap at max (terms value) & min (0)
 
 
 #calculate mention frequency per week
@@ -73,4 +89,6 @@ print(df.groupby('match', as_index=False)['terms'].median())
 
 #plot mentions over time
 mention_frequency.plot(x="week", y="size")
+
+#save plot as .png - in user engagement folder?
 
