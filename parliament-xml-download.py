@@ -76,21 +76,21 @@ hansardlinks = pd.concat(all_dfs, ignore_index=True)
 totalfilestodownload = len(hansardlinks)
 downloadcounter = 1
 
-
-for index, row in hansardlinks.iterrows():
-    try:
-        print("Item " + str(downloadcounter) + " ["+row['filename']+"] of " + str(totalfilestodownload))
-        if os.path.isfile(localpath+row['filename']) == True:
-           print("file already exists - skipping to next file\n")
-           downloadcounter = downloadcounter + 1
-        else:
-            proxies = set_ons_proxies(ssl=True) #find working proxy 
-            print("downloading item " + str(downloadcounter) + " of " + str(totalfilestodownload))
-            myfile = requests.get(row['url'], proxies=proxies, verify=True)
-            open(localpath+row['filename'], 'wb').write(myfile.content)
-            print("downloaded file from: "+ row['url'] + "\n to: " + localpath + row['filename']+'\n')
-            downloadcounter = downloadcounter + 1
-            time.sleep(15) #waits 15sec - to avoid rate limiting
-    except ProxyError:
-        print("<<< No proxies worked - waiting 90 seconds then re-trying >>>")
-        time.sleep(90) #wait 90sec - then re-try
+while downloadcounter <= totalfilestodownload:
+    for index, row in hansardlinks.iterrows():
+        try:
+            print("Item " + str(downloadcounter) + " ["+row['filename']+"] of " + str(totalfilestodownload))
+            if os.path.isfile(localpath+row['filename']) == True:
+               print("file already exists - skipping to next file\n")
+               downloadcounter = downloadcounter + 1
+            else:
+                proxies = set_ons_proxies(ssl=True) #find working proxy 
+                print("downloading item " + str(downloadcounter) + " of " + str(totalfilestodownload))
+                myfile = requests.get(row['url'], proxies=proxies, verify=True)
+                open(localpath+row['filename'], 'wb').write(myfile.content)
+                print("downloaded file from: "+ row['url'] + "\n to: " + localpath + row['filename']+'\n')
+                downloadcounter = downloadcounter + 1
+                time.sleep(15) #waits 15sec - to avoid rate limiting
+        except ProxyError:
+            print("<<< No proxies worked - waiting 60 seconds then re-trying >>>")
+            time.sleep(60) #wait 60sec - then re-try
