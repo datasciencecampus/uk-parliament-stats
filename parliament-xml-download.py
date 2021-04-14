@@ -14,8 +14,8 @@ from requests.exceptions import ProxyError
 import time
 import os.path
 
-#set local path for desired download location
-localpath = 'c:/users/corber/downloads/uk-plt-xml/'
+#set local path for desired download location - default is within project
+localpath = 'data/uk-plt-xml/'
 
 
 #set ONS proxy function
@@ -65,8 +65,8 @@ hansardlinks_xlsx = "data/hansard-link-prep.xlsx"
 
 #read in hansard xlsx & pull into dataframe - append sheetname as additional column
 hansardlinks_sheetnames = pd.read_excel(hansardlinks_xlsx, sheet_name=None)
-
 all_dfs = []
+
 for tab_name, df in hansardlinks_sheetnames.items():
     df['type'] = tab_name
     all_dfs.append(df)

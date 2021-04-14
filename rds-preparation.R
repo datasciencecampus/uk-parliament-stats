@@ -1,6 +1,6 @@
 library(dplyr)
 
-#grab commons debates RDS file
+#grab commons debates RDS file (downloaded from: https://dataverse.harvard.edu/file.xhtml?persistentId=doi:10.7910/DVN/L4OAKN/W2SVMF&version=1.0)
 filename <- file.choose()
 commonsdebates <- readRDS(filename)
 
@@ -8,7 +8,7 @@ commonsdebates <- readRDS(filename)
 tail(commonsdebates)
 
 #change 'date' from chr to date
-as.Date(commonsdebates$Date, format =  "%Y-%m-%d")
+commonsdebates$date <- as.Date(commonsdebates$date, format = "%Y-%m-%d")
 
 #filter out anything pre-2015 to cut down on file size
 commonsdebates_2015_2019 <- filter(commonsdebates, date >= "2015-01-01")
@@ -17,5 +17,5 @@ commonsdebates_2015_2019 <- filter(commonsdebates, date >= "2015-01-01")
 head(commonsdebates_2015_2019)
 
 #output as RDS & CSV
-saveRDS(commonsdebates_2015_2019, "D:/uk-parliament-data/commonsdebates_2015_2019.rds")
-write.csv(commonsdebates_2015_2019,"D:/uk-parliament-data/commonsdebates_2015_2019.csv", row.names = FALSE)
+saveRDS(commonsdebates_2015_2019, "data/commonsdebates_2015_2019.rds")
+write.csv(commonsdebates_2015_2019,"data/commonsdebates_2015_2019.csv", row.names = FALSE)

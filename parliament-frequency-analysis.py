@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 # --- Variables ---
 
 #parliament speech data
-inputfile = "D:/uk-parliament-data/commonsdebates_2015_2019-utf8.csv"
+inputfile = "data/commonsdebates_2015_2019-utf8.csv"
 
 #keywords to search for in speeches
 keywords = ["ONS","Office for National Statistics", "Office of National Statistics", "UKSA", "UK Statistics Authority"]
