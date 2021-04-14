@@ -58,6 +58,8 @@ matchedrows["week"] = matchedrows["year"].astype(str) + "-" + matchedrows["weekn
 #split text up by words into list 
 matchedrows["keyword_location"] = matchedrows["text"].str.find("Office for National Statistics")
 
+### take 200/300 characters either side 
+
 # matchedrows["context-start"] = matchedrows["keyword_location"]-10
 # matchedrows["context-stop"] = matchedrows["keyword_location"]+10
 
