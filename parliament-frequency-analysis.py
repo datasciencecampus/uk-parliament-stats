@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 inputfile = "data/commonsdebates_2015_2019-utf8.csv"
 
 #keywords to search for in speeches
-keywords = ["ONS","Office for National Statistics", "Office of National Statistics", "UKSA", "UK Statistics Authority"]
+keywords = ["ONS","Office for National Statistics", "Office of National Statistics", "UKSA", "UK Statistics Authority", "OSR", "Office for Statistics Regulation", "Office of Statistics Regulation"]
 
 # --- Analysis ---
 df = pd.read_csv(inputfile)
