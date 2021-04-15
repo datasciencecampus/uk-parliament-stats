@@ -53,29 +53,28 @@ matchedrows["weeknum"] = matchedrows["weeknum"].apply(lambda x: '{0:0>2}'.format
 #create year specific week variable (e.g. 2015-03)
 matchedrows["week"] = matchedrows["year"].astype(str) + "-" + matchedrows["weeknum"].astype(str)
 
-#pull out context of mention from speech
+#pull out context of mention from speech - take 200 characters either side 
 
-#split text up by words into list 
+#find character location of key word
 matchedrows["keyword_location"] = matchedrows["text"].str.find("Office for National Statistics")
 
-### take 200/300 characters either side 
+#create start/stop character locations for extracting context, cap at 0 & max length of str
+matchedrows["context-start"] = matchedrows["keyword_location"]-200
+matchedrows["context-stop"] = matchedrows["keyword_location"]+200
 
-# matchedrows["context-start"] = matchedrows["keyword_location"]-10
-# matchedrows["context-stop"] = matchedrows["keyword_location"]+10
+matchedrows.loc[matchedrows["context-start"] < 0, 'context-start'] = 0
+matchedrows.loc[matchedrows["context-stop"] > matchedrows["text"].str.len(), 'context-stop'] = matchedrows["text"].str.len()
 
+#slice string based on start/stop values to extract context
+matchedrows["context"] = matchedrows["text"].str.slice(start = matchedrows["context-start"], stop = matchedrows["context-stop"]) ##doesn't work, returns nan
+matchedrows["context"] = matchedrows["text"].str.slice(start = 3136, stop = 3536) ##this works (have tried several values here - where its out of range it returns an empty string). so problem must be with reading in the values from the start/stop columns?
 
-# matchedrows["context"] = matchedrows["text"].str.slice(start = matchedrows["keyword_location"], stop = 10)
 
 
 # matchedrows["keyword_location"] = matchedrows["text"].str.findall(keywords_combined) ##this returns keywords that have been found in list
 
-
-
-
 # matchedrows["text-split"] = matchedrows["text"].str.split(" ") ##splits speech out into list of words - not ideal though, if keyword we're after is followed by punctuation it won't work?
 
-##identify location of keyword  - first appearance only??
-##extract everything -50 and +50 words in front & behind. cap at max (terms value) & min (0)
 
 
 #calculate mention frequency per week
