@@ -17,7 +17,7 @@ Next steps:
 # --- Libraries ---
 import pandas as pd
 import matplotlib.pyplot as plt
-
+from spacy.lang.en import English
 
 # --- Variables ---
 
@@ -82,7 +82,7 @@ matchedrows.loc[matchedrows["context-stop"] > matchedrows["text"].str.len(), 'co
 matchedrows["context"] = matchedrows.apply(lambda row: context_slicer(row), axis=1)
 
 
-# --- Analysis ---
+# --- Initial Exploration Analysis ---
 
 #calculate mention frequency per week
 mention_frequency = matchedrows.groupby(matchedrows["week"], as_index=False).size()
@@ -103,4 +103,28 @@ print(df.groupby('match', as_index=False)['terms'].median())
 mention_frequency.plot(x="week", y="size")
 
 #save plot as .png - in user engagement folder
-plt.savefig("user-engagement/frequency-of-mentions.png", dpi = 150)
+#no need to update this every time i run this script atm# plt.savefig("user-engagement/frequency-of-mentions.png", dpi = 150)
+
+
+# --- Topic Classification ---
+
+# classification - my use case not a simple binary classification as in dataquest example, will need to explore out to structure model - want to test each text against all topics and choose tag with most relevant topic/all above certain score.
+
+# tokenize > stopword removal > lemmatization (root words) > 
+# other: part of speech (noun, adj, verb etc.), entity detection (could this be useful for identifying specific statistical outputs?), dependency parsing (may be important for sentiment analysis?), 
+
+
+# Load English tokenizer, tagger, parser, NER and word vectors
+nlp = English()
+
+#pull one comment containing ONS mention to help explore spacy functionality
+text = matchedrows.iloc[1,8]
+
+#  "nlp" Object is used to create documents with linguistic annotations.
+my_doc = nlp(text)
+
+# Create list of word tokens
+token_list = []
+for token in my_doc:
+    token_list.append(token.text)
+print(token_list)
