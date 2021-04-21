@@ -8,9 +8,8 @@ Issues:
     - what if >1 item in single speech? Should this be counted multiple times?
 
 Next steps:
-    - find location of match & take 50 words before/after as short context for dashboard
-        -> what if multiple matches?
-    - tf-idf for topic -> do this by debate title or speeches within debates?
+    - Topic classification
+    - Sentiment analysis
 
 """
 
@@ -28,8 +27,20 @@ inputfile = "data/commonsdebates_2015_2019-utf8.csv"
 #keywords to search for in speeches
 keywords = ["ONS","Office for National Statistics", "Office of National Statistics", "UKSA", "UK Statistics Authority", "OSR", "Office for Statistics Regulation", "Office of Statistics Regulation"]
 
-# --- Analysis ---
+# --- Functions ---
+
+#used to extract context around keyword
+def context_slicer (row):
+    return row["text"][row["context-start"]:row["context-stop"]]
+
+
+
+# --- Data Prep ---
+
+# create dataframe
 df = pd.read_csv(inputfile)
+
+# -- Cut down dataframe to only contain rows containing a keyword match
 
 #group keywords together, use '|' to separate and allow str.contains function to parse as logical OR (function accepts regex pattern)
 keywords_combined = '|'.join(keywords)
@@ -39,6 +50,8 @@ df["match"] = df["text"].str.contains(keywords_combined)
 
 #filter df to only contain rows with mentions
 matchedrows = df[df["match"] == True]
+
+# -- Dates & Week numbering
 
 #convert date from object to datetime
 matchedrows["date"] = pd.to_datetime(matchedrows["date"])
@@ -53,7 +66,7 @@ matchedrows["weeknum"] = matchedrows["weeknum"].apply(lambda x: '{0:0>2}'.format
 #create year specific week variable (e.g. 2015-03)
 matchedrows["week"] = matchedrows["year"].astype(str) + "-" + matchedrows["weeknum"].astype(str)
 
-#pull out context of mention from speech - take 200 characters either side 
+# -- Extract context around keyword mention
 
 #find character location of key word
 matchedrows["keyword_location"] = matchedrows["text"].str.find("Office for National Statistics")
@@ -66,16 +79,10 @@ matchedrows.loc[matchedrows["context-start"] < 0, 'context-start'] = 0
 matchedrows.loc[matchedrows["context-stop"] > matchedrows["text"].str.len(), 'context-stop'] = matchedrows["text"].str.len()
 
 #slice string based on start/stop values to extract context
-matchedrows["context"] = matchedrows["text"].str.slice(start = matchedrows["context-start"], stop = matchedrows["context-stop"]) ##doesn't work, returns nan
-matchedrows["context"] = matchedrows["text"].str.slice(start = 3136, stop = 3536) ##this works (have tried several values here - where its out of range it returns an empty string). so problem must be with reading in the values from the start/stop columns?
+matchedrows["context"] = matchedrows.apply(lambda row: context_slicer(row), axis=1)
 
 
-
-# matchedrows["keyword_location"] = matchedrows["text"].str.findall(keywords_combined) ##this returns keywords that have been found in list
-
-# matchedrows["text-split"] = matchedrows["text"].str.split(" ") ##splits speech out into list of words - not ideal though, if keyword we're after is followed by punctuation it won't work?
-
-
+# --- Analysis ---
 
 #calculate mention frequency per week
 mention_frequency = matchedrows.groupby(matchedrows["week"], as_index=False).size()
