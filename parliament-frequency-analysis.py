@@ -119,12 +119,11 @@ mention_frequency.plot(x="week", y="size")
 text = matchedrows.iloc[1,8]
 
 # Load English tokenizer, tagger, parser, NER and word vectors
-nlp = English()
-
-
+nlp = spacy.load('en_core_web_md')
 
 #  "nlp" Object is used to create documents with linguistic annotations.
 doc = nlp(text)
+
 
 # Create list of word tokens
 token_list = []
@@ -152,15 +151,7 @@ for word in doc:
 print("Filtered Sentence:",filtered_sent)
 
 
-nlp.initialize()
-
-lemmatizer = nlp.add_pipe("lemmatizer")
-
-
-lemma_text = lemmatizer(text)
-
 # finding lemma for each word
-for word in lemma_text:
+for word in doc:
     print(word.text,word.lemma_)
     
-spacy.info()
