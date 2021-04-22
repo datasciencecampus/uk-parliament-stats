@@ -17,7 +17,9 @@ Next steps:
 # --- Libraries ---
 import pandas as pd
 import matplotlib.pyplot as plt
+import spacy
 from spacy.lang.en import English
+
 
 # --- Variables ---
 
@@ -113,18 +115,52 @@ mention_frequency.plot(x="week", y="size")
 # tokenize > stopword removal > lemmatization (root words) > 
 # other: part of speech (noun, adj, verb etc.), entity detection (could this be useful for identifying specific statistical outputs?), dependency parsing (may be important for sentiment analysis?), 
 
+#pull one comment containing ONS mention to help explore spacy functionality
+text = matchedrows.iloc[1,8]
 
 # Load English tokenizer, tagger, parser, NER and word vectors
 nlp = English()
 
-#pull one comment containing ONS mention to help explore spacy functionality
-text = matchedrows.iloc[1,8]
+
 
 #  "nlp" Object is used to create documents with linguistic annotations.
-my_doc = nlp(text)
+doc = nlp(text)
 
 # Create list of word tokens
 token_list = []
-for token in my_doc:
+for token in doc:
     token_list.append(token.text)
 print(token_list)
+
+
+# create list of sentence tokens
+sents_list = []
+for sent in doc.sents:
+    sents_list.append(sent.text)
+print(sents_list)
+
+
+#stopwords
+spacy_stopwords = spacy.lang.en.stop_words.STOP_WORDS
+
+# filtering stop words
+filtered_sent=[]
+
+for word in doc:
+    if word.is_stop==False:
+        filtered_sent.append(word)
+print("Filtered Sentence:",filtered_sent)
+
+
+nlp.initialize()
+
+lemmatizer = nlp.add_pipe("lemmatizer")
+
+
+lemma_text = lemmatizer(text)
+
+# finding lemma for each word
+for word in lemma_text:
+    print(word.text,word.lemma_)
+    
+spacy.info()
