@@ -119,6 +119,7 @@ patterns_crime = [
 #Environment
 patterns_environment = [
 [{'LOWER': 'environment'}],
+[{'LOWER': 'climate'}],
 [{'LOWER': 'green'}],
 [{'LOWER': 'carbon'}],
 [{'LOWER': 'fossil'}],
@@ -126,6 +127,7 @@ patterns_environment = [
 [{'LOWER': 'gas'}],
 [{'LOWER': 'electric'}],
 [{'LOWER': 'coal'}],
+[{'LOWER': 'energy'}],
 #net zero?
     ]
 
@@ -184,13 +186,20 @@ patterns_militarysecurity = [
 [{'LOWER': 'cyber'}],
 [{'LOWER': 'mi5'}],
 [{'LOWER': 'mi6'}],
-[{'LOWER': 'intelligence'}]
+[{'LOWER': 'intelligence'}],
+[{'LOWER': 'armed'}, {'LOWER': 'forces'}],
     ]
 
 
 # Foreign Policy
-    #EU/Brexit
-    #NER to identify countries/non-UK locations ?
+
+patterns_foreignpolicy = [
+[{'LOWER': 'eu'}],
+[{'LOWER': 'european'}, {'lower': 'union'}],
+[{'LOWER': 'withdrawal'}],
+[{'LOWER': 'foreign'}],
+    ]
+#can use ENT: GPE to identify locations - but need to exclude domestic locations, how to do this?
 
 # -- Set up matcher in pipeline --
 matcher = Matcher(nlp.vocab, validate=True)
@@ -205,6 +214,7 @@ matcher.add("INEQUAL_WELLBEING", patterns_inequalwellbeing)
 matcher.add("EDUCATION", patterns_education)
 matcher.add("TRANSPORT", patterns_transport)
 matcher.add("MILITARY_SECURITY", patterns_militarysecurity)
+matcher.add("FOREIGNPOLICY", patterns_foreignpolicy)
 
 
 # -- Matching --
