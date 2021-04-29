@@ -25,8 +25,7 @@ Inequalities/Wellbeing
 
 import pandas as pd
 import spacy
-
-
+from spacy.matcher import Matcher
 
 
 # --- Variables ---
@@ -53,5 +52,101 @@ nlp = spacy.load("en_core_web_md")
 # --- Topic Classification --- 
 #ideas: NER for countries -> foreign policy (excl. UK/Wales/Scotland/NI obv)
 
+# -- Patterns for matching --
 
-print([t for t in nlp("This is a debate about the Criminal Justice system.")])
+#Census
+patterns_census = [
+[{'LOWER': 'census'}]
+    ]
+
+#Health
+patterns_health = [
+[{'LOWER': 'health'}],
+[{'LOWER': 'nhs'}],
+[{'LOWER': 'hospital'}],
+[{'LOWER': 'illness'}],
+[{'LOWER': 'disease'}]
+    ]
+
+#COVID-19 - not in 2015-2019 dataset
+
+#Population and Migration
+patterns_popmigration = [
+[{'LOWER': 'migration'}],
+[{'LOWER': 'migrant'}],
+[{'LOWER': 'immigration'}],
+[{'LOWER': 'population'}]
+    ]
+
+
+#Economy
+patterns_economy = [
+[{'LOWER': 'gdp'}],
+[{'LOWER': 'borrow'}],
+[{'LOWER': 'finance'}]
+    ]
+
+#Labour Market
+patterns_labourmarket = [
+[{'LOWER': 'job'}],
+[{'LOWER': 'employment'}],
+[{'LOWER': 'employee'}],
+[{'LOWER': 'employer'}]
+    ]
+
+#Crime
+patterns_crime = [
+[{'LOWER': 'crime'}],
+[{'LOWER': 'criminal'}],
+[{'LOWER': 'police'}],
+[{'LOWER': 'prison'}],
+[{'LOWER': 'court'}],
+[{'LOWER': 'offence'}]
+    ]
+
+
+#Environment
+patterns_environment = [
+[{'LOWER': 'environment'}],
+[{'LOWER': 'green'}],
+[{'LOWER': 'carbon'}],
+[{'LOWER': 'fossil'}],
+[{'LOWER': 'oil'}],
+[{'LOWER': 'gas'}],
+[{'LOWER': 'electric'}],
+[{'LOWER': 'coal'}],
+#net zero?
+    ]
+
+#Inequalities/Wellbeing
+patterns_inequalwellbeing = [
+[{'LOWER': 'equal'}],
+[{'LOWER': 'wellbeing'}],
+[{'LOWER': 'minority'}],
+[{'LOWER': 'lgbt'}],
+    ]
+
+
+# -- Set up matcher in pipeline --
+matcher = Matcher(nlp.vocab, validate=True)
+matcher.add("CRIME", patterns_crime)
+
+
+# -- Matching --
+
+# function for finding matches
+def get_matches(text):
+    doc = nlp(text)
+    matcher(doc)
+    for match_id in matcher(doc):
+        return doc.vocab.strings[match_id]
+    return 'OTHER'
+
+# identify topics from debate title
+df['topic'] = df["agenda"].apply(lambda x : get_matches(x))
+
+
+# -- Evaluate output, % in each topic, samples from each topic -- 
+
+
+    
