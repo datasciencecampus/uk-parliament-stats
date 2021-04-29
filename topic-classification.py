@@ -129,7 +129,15 @@ patterns_inequalwellbeing = [
 
 # -- Set up matcher in pipeline --
 matcher = Matcher(nlp.vocab, validate=True)
+matcher.add("CENSUS", patterns_census)
+matcher.add("HEALTH", patterns_health)
+matcher.add("POPULATION_MIGRATION", patterns_popmigration)
+matcher.add("ECONOMY", patterns_economy)
+matcher.add("LABOURMARKET", patterns_labourmarket)
 matcher.add("CRIME", patterns_crime)
+matcher.add("ENVIRONMENT", patterns_environment)
+matcher.add("INEQUAL_WELLBEING", patterns_inequalwellbeing)
+
 
 
 # -- Matching --
@@ -139,11 +147,13 @@ def get_matches(text):
     doc = nlp(text)
     matcher(doc)
     for match_id in matcher(doc):
-        return doc.vocab.strings[match_id]
+        return doc.vocab.strings[match_id[0]] # match_id returns tuple of 3 ints: hashed ID, start, end
     return 'OTHER'
 
 # identify topics from debate title
 df['topic'] = df["agenda"].apply(lambda x : get_matches(x))
+
+print(df['topic'].value_counts())
 
 
 # -- Evaluate output, % in each topic, samples from each topic -- 
