@@ -24,6 +24,7 @@ Inequalities/Wellbeing
 # --- Libraries ---
 
 import pandas as pd
+import numpy as np
 import spacy
 from spacy.matcher import Matcher
 
@@ -32,6 +33,9 @@ from spacy.matcher import Matcher
 
 #parliament speech dataset
 inputfile = "data/commonsdebates_2015_2019-utf8.csv"
+
+#manually classified debate list
+manualtopics = "data/unmatched-debates--manual-topics.xlsx"
 
 
 
@@ -296,15 +300,38 @@ def get_matches(text):
 # identify topics from debate title
 df['topic'] = df["agenda"].apply(lambda x : get_matches(x))
 
-print(df['topic'].value_counts())
+#output anything tagged as 'OTHER' to xlsx for review
+df2 = df[df['topic'] == "OTHER"]
+df2.to_excel("data/unmatched-debates.xlsx")
+
+# bring in manually classified debates
+df_manual = pd.read_excel(manualtopics, index_col=0)
+
+#force topics to uppercase & replace nan with "OTHER"
+df_manual["topic-manual"] = df_manual["topic-manual"].str.upper()
+df_manual = df_manual["topic-manual"]
+df_manual = df_manual.replace(np.nan, 'OTHER', regex=True)
+
+#join manual topics into primary dataframe
+df_combined = df.join(df_manual)
+
+#where topic = OTHER & topic-manual != null then take topic manual value
+def topic_overwrite(row):
+    if (row["topic"] == "OTHER"):
+        return row["topic-manual"]
+    else:
+        return row["topic"]
+    
+df_combined["topic"] = df_combined.apply(lambda row: topic_overwrite(row), axis=1)
+
+
+print(df_combined['topic'].value_counts())
 
 
 
 ## Testing
 
-#output anything tagged as 'OTHER' to xlsx for review
-df2 = df[df['topic'] == "OTHER"]
-df2.to_excel("data/unmatched-debates.xlsx")
+
 
 
 #print sample of 'OTHER' debates to help update rules
