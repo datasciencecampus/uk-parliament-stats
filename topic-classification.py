@@ -76,6 +76,8 @@ patterns_health = [
 [{'LEMMA': 'vaccinate'}],
 [{'LEMMA': 'vaccination'}],
 [{'LEMMA': 'medicine'}],
+[{'LEMMA': 'treatment'}],
+[{'LEMMA': 'treat'}],
     ]
 
 #COVID-19 - not in 2015-2019 dataset
@@ -88,6 +90,7 @@ patterns_popmigration = [
 [{'LEMMA': 'immigration'}],
 [{'LEMMA': 'population'}],
 [{'LEMMA': 'refugee'}],
+[{'LEMMA': 'visa'}],
     ]
 
 
@@ -95,6 +98,7 @@ patterns_popmigration = [
 patterns_economy = [
 [{'LOWER': 'gdp'}], #GDP acronym
 [{'LOWER': 'sme'}], #SME acronym
+[{'LEMMA': 'economy'}],
 [{'LEMMA': 'borrow'}],
 [{'LEMMA': 'finance'}],
 [{'LEMMA': 'goods'}],
@@ -116,6 +120,8 @@ patterns_labourmarket = [
 [{'LEMMA': 'employee'}],
 [{'LEMMA': 'employer'}],
 [{'LEMMA': 'work'}],
+[{'LEMMA': 'worker'}],
+[{'LEMMA': 'redundancy'}],
     ]
 
 #Crime
@@ -130,6 +136,8 @@ patterns_crime = [
 [{'LEMMA': 'prosecution'}],
 [{'LEMMA': 'criminal'}],
 [{'LEMMA': 'offender'}],
+[{'LEMMA': 'sentence'}],
+[{'LEMMA': 'sentencing'}],
     ]
 
 
@@ -144,7 +152,11 @@ patterns_environment = [
 [{'LEMMA': 'gas'}],
 [{'LEMMA': 'electric'}],
 [{'LEMMA': 'coal'}],
+[{'LEMMA': 'solar'}],
+[{'LEMMA': 'wind'}],
 [{'LEMMA': 'energy'}],
+[{'LEMMA': 'nature'}],
+[{'LEMMA': 'natural'}],
     ]
 
 #Inequalities/Wellbeing
@@ -169,12 +181,15 @@ patterns_education = [
 [{'LEMMA': 'teacher'}],
 [{'LEMMA': 'teach'}],
 [{'LEMMA': 'learn'}],
+[{'LEMMA': 'pupil'}],
+[{'LEMMA': 'student'}],
 [{'LEMMA': 'college'}],
 [{'LEMMA': 'university'}],
     ]
 
 # Transport
 patterns_transport = [
+[{'LOWER': 'main'}, {'LOWER': 'line'}],
 [{'LEMMA': 'transport'}],
 [{'LEMMA': 'transportation'}],
 [{'LEMMA': 'rail'}],
@@ -195,6 +210,9 @@ patterns_transport = [
 
 patterns_defence = [
 [{'LOWER': 'raf'}], #acronym - RAF
+[{'LOWER': 'armed'}, {'LOWER': 'forces'}],
+[{'LOWER': 'air'}, {'LOWER': 'force'}],
+[{'LEMMA': 'defence'}],
 [{'LEMMA': 'war'}],
 [{'LEMMA': 'army'}], 
 [{'LEMMA': 'navy'}],
@@ -204,7 +222,7 @@ patterns_defence = [
 [{'LEMMA': 'security'}],
 [{'LEMMA': 'cyber'}],
 [{'LEMMA': 'intelligence'}],
-[{'LEMMA': 'armed'}, {'LEMMA': 'forces'}],
+
     ]
 
 
@@ -227,8 +245,11 @@ patterns_housing = [
 [{'LEMMA': 'landlord'}],
 [{'LEMMA': 'tenant'}],
 [{'LEMMA': 'rent'}],
+[{'LEMMA': 'let'}],
 [{'LEMMA': 'mortgage'}],
 [{'LEMMA': 'tenant'}],
+[{'LEMMA': 'accommodation'}],
+
     ]
 
 # Tax & Public Spending
@@ -237,7 +258,8 @@ patterns_taxspend= [
 [{'LEMMA': 'spending'}],
 [{'LEMMA': 'tax'}],
 [{'LEMMA': 'taxation'}],
-
+[{'LEMMA': 'welfare'}],
+[{'LEMMA': 'benefit'}],
     ]
 
 
@@ -280,17 +302,20 @@ print(df['topic'].value_counts())
 
 ## Testing
 
-#print sample of 'OTHER' debates to help update rules
+#output anything tagged as 'OTHER' to xlsx for review
 df2 = df[df['topic'] == "OTHER"]
+df2.to_excel("data/unmatched-debates.xlsx")
+
+
+#print sample of 'OTHER' debates to help update rules
+
 print(df2['agenda'].sample(10))
 
 get_matches("the crime stats from the census") #test for multiple matches - not working atm
 
-df2.to_excel("data/unmatched-debates.xlsx")
-
 # -- Evaluate output, % in each topic, samples from each topic -- 
 print(lemmatizer.mode)
-lemtest = nlp("We need to provide care for people who are ill")
+lemtest = nlp("working flexibly")
 
 for word in lemtest:
     print(word.lemma_)
