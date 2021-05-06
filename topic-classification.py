@@ -337,7 +337,6 @@ df_trainvalid = list(zip(df.agenda, df.topic))
 # - Set up training/test data for model -- 40% for validation / seed to keep consistent / shuffle to mix up debates
 training_data, validation_data = train_test_split(df_trainvalid, test_size=0.4, random_state=3, shuffle=True)
 
-#assign half to training_data, half to validation_data
 
 
 #function to apply category labels based on topic 
