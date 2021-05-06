@@ -1,8 +1,14 @@
+# Directories #
+data/
+
+
+
+
 # Data files #
-###################
 
 *.rds
 *.csv
 *.xlsx
 *.xml
 *.tsv
+*.spacy

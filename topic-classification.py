@@ -26,7 +26,9 @@ Inequalities/Wellbeing
 import pandas as pd
 import numpy as np
 import spacy
+from spacy.tokens import DocBin
 from spacy.matcher import Matcher
+from sklearn.model_selection import train_test_split
 
 
 # --- Variables ---
@@ -327,10 +329,286 @@ df_combined["topic"] = df_combined.apply(lambda row: topic_overwrite(row), axis=
 
 print(df_combined['topic'].value_counts())
 
+# -- Splitting into training/validation data --
+
+#cut df down to relevant fields -> debate title + topic
+df_trainvalid = list(zip(df.agenda, df.topic))
+
+# - Set up training/test data for model -- 40% for validation / seed to keep consistent / shuffle to mix up debates
+training_data, validation_data = train_test_split(df_trainvalid, test_size=0.4, random_state=3, shuffle=True)
+
+#assign half to training_data, half to validation_data
+
+
+#function to apply category labels based on topic 
+def make_docs(data):
+    docs = []
+    for doc, topic in nlp.pipe(data, as_tuples=True):
+        if topic == "CENSUS":
+            doc.cats["CENSUS"] = 1
+            doc.cats["HEALTH"] = 0
+            doc.cats["POPULATION_MIGRATION"] = 0
+            doc.cats["ECONOMY"] = 0
+            doc.cats["LABOURMARKET"] = 0
+            doc.cats["CRIME"] = 0
+            doc.cats["ENVIRONMENT"] = 0
+            doc.cats["INEQUAL_WELLBEING"] = 0
+            doc.cats["EDUCATION"] = 0
+            doc.cats["TRANSPORT"] = 0
+            doc.cats["DEFENCE"] = 0
+            doc.cats["FOREIGNPOLICY"] = 0
+            doc.cats["HOUSING"] = 0
+            doc.cats["TAXSPEND"] = 0
+            doc.cats["OTHER"] = 0
+        elif topic == "HEALTH":
+            doc.cats["CENSUS"] = 0
+            doc.cats["HEALTH"] = 1
+            doc.cats["POPULATION_MIGRATION"] = 0
+            doc.cats["ECONOMY"] = 0
+            doc.cats["LABOURMARKET"] = 0
+            doc.cats["CRIME"] = 0
+            doc.cats["ENVIRONMENT"] = 0
+            doc.cats["INEQUAL_WELLBEING"] = 0
+            doc.cats["EDUCATION"] = 0
+            doc.cats["TRANSPORT"] = 0
+            doc.cats["DEFENCE"] = 0
+            doc.cats["FOREIGNPOLICY"] = 0
+            doc.cats["HOUSING"] = 0
+            doc.cats["TAXSPEND"] = 0
+            doc.cats["OTHER"] = 0
+        elif topic == "POPULATION_MIGRATION":
+            doc.cats["CENSUS"] = 0
+            doc.cats["HEALTH"] = 0
+            doc.cats["POPULATION_MIGRATION"] = 1
+            doc.cats["ECONOMY"] = 0
+            doc.cats["LABOURMARKET"] = 0
+            doc.cats["CRIME"] = 0
+            doc.cats["ENVIRONMENT"] = 0
+            doc.cats["INEQUAL_WELLBEING"] = 0
+            doc.cats["EDUCATION"] = 0
+            doc.cats["TRANSPORT"] = 0
+            doc.cats["DEFENCE"] = 0
+            doc.cats["FOREIGNPOLICY"] = 0
+            doc.cats["HOUSING"] = 0
+            doc.cats["TAXSPEND"] = 0
+            doc.cats["OTHER"] = 0
+        elif topic == "ECONOMY":
+            doc.cats["CENSUS"] = 0
+            doc.cats["HEALTH"] = 0
+            doc.cats["POPULATION_MIGRATION"] = 0
+            doc.cats["ECONOMY"] = 1
+            doc.cats["LABOURMARKET"] = 0
+            doc.cats["CRIME"] = 0
+            doc.cats["ENVIRONMENT"] = 0
+            doc.cats["INEQUAL_WELLBEING"] = 0
+            doc.cats["EDUCATION"] = 0
+            doc.cats["TRANSPORT"] = 0
+            doc.cats["DEFENCE"] = 0
+            doc.cats["FOREIGNPOLICY"] = 0
+            doc.cats["HOUSING"] = 0
+            doc.cats["TAXSPEND"] = 0
+            doc.cats["OTHER"] = 0
+        elif topic == "LABOURMARKET":
+            doc.cats["CENSUS"] = 0
+            doc.cats["HEALTH"] = 0
+            doc.cats["POPULATION_MIGRATION"] = 0
+            doc.cats["ECONOMY"] = 0
+            doc.cats["LABOURMARKET"] = 1
+            doc.cats["CRIME"] = 0
+            doc.cats["ENVIRONMENT"] = 0
+            doc.cats["INEQUAL_WELLBEING"] = 0
+            doc.cats["EDUCATION"] = 0
+            doc.cats["TRANSPORT"] = 0
+            doc.cats["DEFENCE"] = 0
+            doc.cats["FOREIGNPOLICY"] = 0
+            doc.cats["HOUSING"] = 0
+            doc.cats["TAXSPEND"] = 0
+            doc.cats["OTHER"] = 0
+        elif topic == "CRIME":
+            doc.cats["CENSUS"] = 0
+            doc.cats["HEALTH"] = 0
+            doc.cats["POPULATION_MIGRATION"] = 0
+            doc.cats["ECONOMY"] = 0
+            doc.cats["LABOURMARKET"] = 0
+            doc.cats["CRIME"] = 1
+            doc.cats["ENVIRONMENT"] = 0
+            doc.cats["INEQUAL_WELLBEING"] = 0
+            doc.cats["EDUCATION"] = 0
+            doc.cats["TRANSPORT"] = 0
+            doc.cats["DEFENCE"] = 0
+            doc.cats["FOREIGNPOLICY"] = 0
+            doc.cats["HOUSING"] = 0
+            doc.cats["TAXSPEND"] = 0
+            doc.cats["OTHER"] = 0
+        elif topic == "ENVIRONMENT":
+            doc.cats["CENSUS"] = 0
+            doc.cats["HEALTH"] = 0
+            doc.cats["POPULATION_MIGRATION"] = 0
+            doc.cats["ECONOMY"] = 0
+            doc.cats["LABOURMARKET"] = 0
+            doc.cats["CRIME"] = 0
+            doc.cats["ENVIRONMENT"] = 1
+            doc.cats["INEQUAL_WELLBEING"] = 0
+            doc.cats["EDUCATION"] = 0
+            doc.cats["TRANSPORT"] = 0
+            doc.cats["DEFENCE"] = 0
+            doc.cats["FOREIGNPOLICY"] = 0
+            doc.cats["HOUSING"] = 0
+            doc.cats["TAXSPEND"] = 0
+            doc.cats["OTHER"] = 0
+        elif topic == "INEQUAL_WELLBEING":
+            doc.cats["CENSUS"] = 0
+            doc.cats["HEALTH"] = 0
+            doc.cats["POPULATION_MIGRATION"] = 0
+            doc.cats["ECONOMY"] = 0
+            doc.cats["LABOURMARKET"] = 0
+            doc.cats["CRIME"] = 0
+            doc.cats["ENVIRONMENT"] = 0
+            doc.cats["INEQUAL_WELLBEING"] = 1
+            doc.cats["EDUCATION"] = 0
+            doc.cats["TRANSPORT"] = 0
+            doc.cats["DEFENCE"] = 0
+            doc.cats["FOREIGNPOLICY"] = 0
+            doc.cats["HOUSING"] = 0
+            doc.cats["TAXSPEND"] = 0
+            doc.cats["OTHER"] = 0
+        elif topic == "EDUCATION":
+            doc.cats["CENSUS"] = 0
+            doc.cats["HEALTH"] = 0
+            doc.cats["POPULATION_MIGRATION"] = 0
+            doc.cats["ECONOMY"] = 0
+            doc.cats["LABOURMARKET"] = 0
+            doc.cats["CRIME"] = 0
+            doc.cats["ENVIRONMENT"] = 0
+            doc.cats["INEQUAL_WELLBEING"] = 0
+            doc.cats["EDUCATION"] = 1
+            doc.cats["TRANSPORT"] = 0
+            doc.cats["DEFENCE"] = 0
+            doc.cats["FOREIGNPOLICY"] = 0
+            doc.cats["HOUSING"] = 0
+            doc.cats["TAXSPEND"] = 0
+            doc.cats["OTHER"] = 0
+        elif topic == "TRANSPORT":
+            doc.cats["CENSUS"] = 0
+            doc.cats["HEALTH"] = 0
+            doc.cats["POPULATION_MIGRATION"] = 0
+            doc.cats["ECONOMY"] = 0
+            doc.cats["LABOURMARKET"] = 0
+            doc.cats["CRIME"] = 0
+            doc.cats["ENVIRONMENT"] = 0
+            doc.cats["INEQUAL_WELLBEING"] = 0
+            doc.cats["EDUCATION"] = 0
+            doc.cats["TRANSPORT"] = 1
+            doc.cats["DEFENCE"] = 0
+            doc.cats["FOREIGNPOLICY"] = 0
+            doc.cats["HOUSING"] = 0
+            doc.cats["TAXSPEND"] = 0
+            doc.cats["OTHER"] = 0
+        elif topic == "DEFENCE":
+            doc.cats["CENSUS"] = 0
+            doc.cats["HEALTH"] = 0
+            doc.cats["POPULATION_MIGRATION"] = 0
+            doc.cats["ECONOMY"] = 0
+            doc.cats["LABOURMARKET"] = 0
+            doc.cats["CRIME"] = 0
+            doc.cats["ENVIRONMENT"] = 0
+            doc.cats["INEQUAL_WELLBEING"] = 0
+            doc.cats["EDUCATION"] = 0
+            doc.cats["TRANSPORT"] = 0
+            doc.cats["DEFENCE"] = 1
+            doc.cats["FOREIGNPOLICY"] = 0
+            doc.cats["HOUSING"] = 0
+            doc.cats["TAXSPEND"] = 0
+            doc.cats["OTHER"] = 0
+        elif topic == "FOREIGNPOLICY":
+            doc.cats["CENSUS"] = 0
+            doc.cats["HEALTH"] = 0
+            doc.cats["POPULATION_MIGRATION"] = 0
+            doc.cats["ECONOMY"] = 0
+            doc.cats["LABOURMARKET"] = 0
+            doc.cats["CRIME"] = 0
+            doc.cats["ENVIRONMENT"] = 0
+            doc.cats["INEQUAL_WELLBEING"] = 0
+            doc.cats["EDUCATION"] = 0
+            doc.cats["TRANSPORT"] = 0
+            doc.cats["DEFENCE"] = 0
+            doc.cats["FOREIGNPOLICY"] = 1
+            doc.cats["HOUSING"] = 0
+            doc.cats["TAXSPEND"] = 0
+            doc.cats["OTHER"] = 0
+        elif topic == "HOUSING":
+            doc.cats["CENSUS"] = 0
+            doc.cats["HEALTH"] = 0
+            doc.cats["POPULATION_MIGRATION"] = 0
+            doc.cats["ECONOMY"] = 0
+            doc.cats["LABOURMARKET"] = 0
+            doc.cats["CRIME"] = 0
+            doc.cats["ENVIRONMENT"] = 0
+            doc.cats["INEQUAL_WELLBEING"] = 0
+            doc.cats["EDUCATION"] = 0
+            doc.cats["TRANSPORT"] = 0
+            doc.cats["DEFENCE"] = 0
+            doc.cats["FOREIGNPOLICY"] = 0
+            doc.cats["HOUSING"] = 1
+            doc.cats["TAXSPEND"] = 0
+            doc.cats["OTHER"] = 0
+        elif topic == "TAXSPEND":
+            doc.cats["CENSUS"] = 0
+            doc.cats["HEALTH"] = 0
+            doc.cats["POPULATION_MIGRATION"] = 0
+            doc.cats["ECONOMY"] = 0
+            doc.cats["LABOURMARKET"] = 0
+            doc.cats["CRIME"] = 0
+            doc.cats["ENVIRONMENT"] = 0
+            doc.cats["INEQUAL_WELLBEING"] = 0
+            doc.cats["EDUCATION"] = 0
+            doc.cats["TRANSPORT"] = 0
+            doc.cats["DEFENCE"] = 0
+            doc.cats["FOREIGNPOLICY"] = 0
+            doc.cats["HOUSING"] = 0
+            doc.cats["TAXSPEND"] = 1
+            doc.cats["OTHER"] = 0
+        else:
+            doc.cats["CENSUS"] = 0
+            doc.cats["HEALTH"] = 0
+            doc.cats["POPULATION_MIGRATION"] = 0
+            doc.cats["ECONOMY"] = 0
+            doc.cats["LABOURMARKET"] = 0
+            doc.cats["CRIME"] = 0
+            doc.cats["ENVIRONMENT"] = 0
+            doc.cats["INEQUAL_WELLBEING"] = 0
+            doc.cats["EDUCATION"] = 0
+            doc.cats["TRANSPORT"] = 0
+            doc.cats["DEFENCE"] = 0
+            doc.cats["FOREIGNPOLICY"] = 0
+            doc.cats["HOUSING"] = 0
+            doc.cats["TAXSPEND"] = 0
+            doc.cats["OTHER"] = 1
+        docs.append(doc)
+    return (docs)
+
+
+train_docs = make_docs(training_data)
+doc_bin = DocBin(docs = train_docs)
+doc_bin.to_disk("data/spacy/train.spacy")
+
+validation_docs = make_docs(validation_data)
+doc_bin = DocBin(docs = validation_docs)
+doc_bin.to_disk("data/spacy/validation.spacy")
+
+
 
 
 ## Testing
 
+text = validation_data[15]
+
+nlp_debates = spacy.load("data/spacy/output/model-last")
+
+testingdoc = nlp_debates(text[0])
+
+print(testingdoc.cats)
+print(text)
 
 
 
