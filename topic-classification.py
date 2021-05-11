@@ -331,13 +331,17 @@ print(df_combined['topic'].value_counts())
 
 # -- Splitting into training/validation data --
 
+df_combined["combined_debate_speech"] = "<DEBATE> " + df_combined["agenda"] + " <SPEECH> " + df_combined["text"]
+
 #cut df down to relevant fields -> debate title + topic
-df_trainvalid = list(zip(df.agenda, df.topic))
-
+df_debate_trainvalid = list(zip(df_combined.agenda, df_combined.topic))
+df_speech_trainvalid = list(zip(df_combined.text, df_combined.topic))
+df_combined_trainvalid = list(zip(df_combined.combined_debate_speech, df_combined.topic))
+    
 # - Set up training/test data for model -- 40% for validation / seed to keep consistent / shuffle to mix up debates
-training_data, validation_data = train_test_split(df_trainvalid, test_size=0.4, random_state=3, shuffle=True)
-
-
+debate_training_data, debate_validation_data = train_test_split(df_debate_trainvalid, test_size=0.4, random_state=3, shuffle=True)
+speech_training_data, speech_validation_data = train_test_split(df_speech_trainvalid, test_size=0.4, random_state=3, shuffle=True)
+combined_training_data, combined_validation_data = train_test_split(df_combined_trainvalid, test_size=0.4, random_state=3, shuffle=True)
 
 #function to apply category labels based on topic 
 def make_docs(data):
@@ -587,29 +591,32 @@ def make_docs(data):
     return (docs)
 
 
-train_docs = make_docs(training_data)
+#Training/Validation data - Debate only
+train_docs = make_docs(debate_training_data)
 doc_bin = DocBin(docs = train_docs)
-doc_bin.to_disk("data/spacy/train.spacy")
+doc_bin.to_disk("data/spacy/debate_train.spacy")
 
-validation_docs = make_docs(validation_data)
+validation_docs = make_docs(debate_validation_data)
 doc_bin = DocBin(docs = validation_docs)
-doc_bin.to_disk("data/spacy/validation.spacy")
+doc_bin.to_disk("data/spacy/debate_validation.spacy")
 
+#Training/Validation data - Speech only
+train_docs = make_docs(speech_training_data)
+doc_bin = DocBin(docs = train_docs)
+doc_bin.to_disk("data/spacy/speech_train.spacy")
 
+validation_docs = make_docs(speech_validation_data)
+doc_bin = DocBin(docs = validation_docs)
+doc_bin.to_disk("data/spacy/speech_validation.spacy")
 
+#Training/Validation data - Debate & Speech combined
+train_docs = make_docs(combined_training_data)
+doc_bin = DocBin(docs = train_docs)
+doc_bin.to_disk("data/spacy/combined_train.spacy")
 
-## Testing
-
-text = validation_data[15]
-
-nlp_debates = spacy.load("data/spacy/output/model-last")
-
-testingdoc = nlp_debates(text[0])
-
-print(testingdoc.cats)
-print(text)
-
-
+validation_docs = make_docs(combined_validation_data)
+doc_bin = DocBin(docs = validation_docs)
+doc_bin.to_disk("data/spacy/combined_validation.spacy")
 
 #print sample of 'OTHER' debates to help update rules
 
