@@ -28,6 +28,7 @@ import numpy as np
 import spacy
 from spacy.tokens import DocBin
 from spacy.matcher import Matcher
+import string
 from sklearn.model_selection import train_test_split
 
 
@@ -302,6 +303,10 @@ def get_matches(text):
 # identify topics from debate title
 df['topic'] = df["agenda"].apply(lambda x : get_matches(x))
 
+# output sample of 200 - evaluating rules based approach
+df_evaluation = df.sample(frac=0.2, random_state=1)
+df_evaluation.to_excel("data/rules-based-approach--evaluation.xlsx")
+
 #output anything tagged as 'OTHER' to xlsx for review
 df2 = df[df['topic'] == "OTHER"]
 df2.to_excel("data/unmatched-debates.xlsx")
@@ -333,13 +338,40 @@ print(df_combined['topic'].value_counts())
 
 df_combined["combined_debate_speech"] = "<DEBATE> " + df_combined["agenda"] + " <SPEECH> " + df_combined["text"]
 
+##cut out stopwords from debate title
+
+#stopwords
+stopwords = spacy.lang.en.stop_words.STOP_WORDS
+# punctuation
+punctuation = string.punctuation
+
+def spacy_tokenizer(sentence):
+    # Creating our token object, which is used to create documents with linguistic annotations.
+    mytokens = nlp(sentence)
+
+    # Lemmatizing each token and converting each token into lowercase
+    mytokens = [ word.lemma_.lower().strip() if word.lemma_ != "-PRON-" else word.lower_ for word in mytokens ]
+
+    # Removing stop words
+    mytokens = [ word for word in mytokens if word not in stopwords and word not in punctuation ]
+
+    #Convert to string
+    stringoutput = " ".join(mytokens)
+
+    # return preprocessed list of tokens
+    return stringoutput
+
+df_combined['agenda_cleaned'] = df_combined["agenda"].apply(lambda x : spacy_tokenizer(x))
+
 #cut df down to relevant fields -> debate title + topic
 df_debate_trainvalid = list(zip(df_combined.agenda, df_combined.topic))
+df_debate_cleaned_trainvalid = list(zip(df_combined.agenda_cleaned, df_combined.topic))
 df_speech_trainvalid = list(zip(df_combined.text, df_combined.topic))
 df_combined_trainvalid = list(zip(df_combined.combined_debate_speech, df_combined.topic))
     
 # - Set up training/test data for model -- 40% for validation / seed to keep consistent / shuffle to mix up debates
 debate_training_data, debate_validation_data = train_test_split(df_debate_trainvalid, test_size=0.4, random_state=3, shuffle=True)
+debate_cleaned_training_data, debate_cleaned_validation_data = train_test_split(df_debate_cleaned_trainvalid, test_size=0.4, random_state=3, shuffle=True)
 speech_training_data, speech_validation_data = train_test_split(df_speech_trainvalid, test_size=0.4, random_state=3, shuffle=True)
 combined_training_data, combined_validation_data = train_test_split(df_combined_trainvalid, test_size=0.4, random_state=3, shuffle=True)
 
@@ -378,6 +410,16 @@ doc_bin.to_disk("data/spacy/debate_train.spacy")
 validation_docs = make_docs(debate_validation_data)
 doc_bin = DocBin(docs = validation_docs)
 doc_bin.to_disk("data/spacy/debate_validation.spacy")
+
+#Training/Validation data - Debate (cleaned) only
+train_docs = make_docs(debate_cleaned_training_data)
+doc_bin = DocBin(docs = train_docs)
+doc_bin.to_disk("data/spacy/debate_cleaned_train.spacy")
+
+validation_docs = make_docs(debate_cleaned_validation_data)
+doc_bin = DocBin(docs = validation_docs)
+doc_bin.to_disk("data/spacy/debate_cleaned_validation.spacy")
+
 
 #Training/Validation data - Speech only
 train_docs = make_docs(speech_training_data)
