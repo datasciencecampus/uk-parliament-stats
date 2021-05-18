@@ -19,7 +19,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import spacy
 import string
-from spacy.lang.en import English
 from sklearn.feature_extraction.text import CountVectorizer,TfidfVectorizer
 from sklearn.base import TransformerMixin
 from sklearn.model_selection import train_test_split
@@ -65,9 +64,12 @@ matchedrows = df[df["match"] == True]
 #convert date from object to datetime
 matchedrows["date"] = pd.to_datetime(matchedrows["date"])
 
-#extract year & week from the date
+#extract year, weeknumber and date of start of the week from the date field
 matchedrows["year"] = matchedrows["date"].dt.year
 matchedrows["weeknum"] = matchedrows["date"].dt.week
+matchedrows['weekstart'] = matchedrows['date'].dt.to_period('W').apply(lambda r: r.start_time)
+
+
 
 #force two figures in weeknum, e.g. '5' -> '05', so that ordering can be done using week var created below
 matchedrows["weeknum"] = matchedrows["weeknum"].apply(lambda x: '{0:0>2}'.format(x))

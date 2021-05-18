@@ -125,7 +125,7 @@ patterns_labourmarket = [
 [{'LEMMA': 'employment'}],
 [{'LEMMA': 'employee'}],
 [{'LEMMA': 'employer'}],
-[{'LEMMA': {'NOT_IN': ['social']}, "OP": "*"}, {"LEMMA": "work"},  #include work - but exclude 'social work'
+[{'LEMMA': {'NOT_IN': ['social']}, "OP": "*"}, {"LEMMA": "work"}],  #include work - but exclude 'social work'
 [{'LEMMA': 'worker'}],
 [{'LEMMA': 'redundancy'}],
     ]
@@ -251,7 +251,7 @@ patterns_foreignpolicy = [
 # Housing
 
 patterns_housing = [
-[{'LEMMA': {'NOT_IN': ['public']}, "OP": "*"}, {"LEMMA": "house"}, {'LEMMA': {'NOT_IN': ['of']}, "OP": "*"}], #include house but exclude 'public house' & 'house of..' (e.g. house of commons, lords etc.)
+[{'LEMMA': {'NOT_IN': ['public']}, 'OP': '*'}, {'LEMMA': 'house'}, {'LEMMA': {'NOT_IN': ['of']}, 'OP': '*'}], #include house but exclude 'public house' & 'house of..' (e.g. house of commons, lords etc.)
 [{'LEMMA': 'housing'}],
 [{'LEMMA': 'landlord'}],
 [{'LEMMA': 'tenant'}],
@@ -304,7 +304,7 @@ def get_matches(text):
     return 'OTHER'
 
 #test matcher
-get_matches("public house building debate") #test for multiple matches - not working atm
+get_matches("people out of social work") #test for multiple matches - not working atm
 
 # identify topics from debate title
 df['topic'] = df["agenda"].apply(lambda x : get_matches(x))
