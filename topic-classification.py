@@ -121,12 +121,11 @@ patterns_economy = [
 
 #Labour Market
 patterns_labourmarket = [
-[{'OP': '!'}, {'LEMMA': 'social'}, {'LEMMA': 'work'}], #exclude 'social work'
 [{'LEMMA': 'job'}],
 [{'LEMMA': 'employment'}],
 [{'LEMMA': 'employee'}],
 [{'LEMMA': 'employer'}],
-[{'LEMMA': 'work'}],
+[{'LEMMA': {'NOT_IN': ['social']}, "OP": "*"}, {"LEMMA": "work"},  #include work - but exclude 'social work'
 [{'LEMMA': 'worker'}],
 [{'LEMMA': 'redundancy'}],
     ]
@@ -252,9 +251,7 @@ patterns_foreignpolicy = [
 # Housing
 
 patterns_housing = [
-[{'OP': '!'}, {'LEMMA': 'public'}, {'LEMMA': 'house'}], #exclude 'public house'
-[{'OP': '!'}, {'LEMMA': 'house'}, {'LEMMA': 'of'}], #exclude 'house of..' (e.g. house of commons, lords etc.)
-[{'LEMMA': 'house'}],
+[{'LEMMA': {'NOT_IN': ['public']}, "OP": "*"}, {"LEMMA": "house"}, {'LEMMA': {'NOT_IN': ['of']}, "OP": "*"}], #include house but exclude 'public house' & 'house of..' (e.g. house of commons, lords etc.)
 [{'LEMMA': 'housing'}],
 [{'LEMMA': 'landlord'}],
 [{'LEMMA': 'tenant'}],
@@ -263,7 +260,6 @@ patterns_housing = [
 [{'LEMMA': 'mortgage'}],
 [{'LEMMA': 'tenant'}],
 [{'LEMMA': 'accommodation'}],
-
     ]
 
 # Tax & Public Spending
@@ -306,6 +302,9 @@ def get_matches(text):
     for match_id in matcher(rootdoc):
         return rootdoc.vocab.strings[match_id[0]] # match_id returns tuple of 3 ints: hashed ID, start, end (see: https://spacy.io/usage/spacy-101#vocab)
     return 'OTHER'
+
+#test matcher
+get_matches("public house building debate") #test for multiple matches - not working atm
 
 # identify topics from debate title
 df['topic'] = df["agenda"].apply(lambda x : get_matches(x))
@@ -449,8 +448,6 @@ doc_bin.to_disk("data/spacy/combined_validation.spacy")
 #print sample of 'OTHER' debates to help update rules
 
 print(df2['agenda'].sample(10))
-
-get_matches("the crime stats from the census") #test for multiple matches - not working atm
 
 # -- Evaluate output, % in each topic, samples from each topic -- 
 print(lemmatizer.mode)
