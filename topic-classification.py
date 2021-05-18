@@ -104,12 +104,11 @@ patterns_popmigration = [
 #Economy
 patterns_economy = [
 [{'LOWER': 'gdp'}], #GDP acronym
-[{'LOWER': 'sme'}], #SME acronym
+[{'LEMMA': 'sme'}], #SME acronym
 [{'LEMMA': 'economy'}],
 [{'LEMMA': 'borrow'}],
 [{'LEMMA': 'finance'}],
 [{'LEMMA': 'goods'}],
-[{'LEMMA': 'investment'}],
 [{'LEMMA': 'trade'}],
 [{'LEMMA': 'product'}],
 [{'LEMMA': 'business'}],
@@ -122,6 +121,7 @@ patterns_economy = [
 
 #Labour Market
 patterns_labourmarket = [
+[{'OP': '!'}, {'LEMMA': 'social'}, {'LEMMA': 'work'}], #exclude 'social work'
 [{'LEMMA': 'job'}],
 [{'LEMMA': 'employment'}],
 [{'LEMMA': 'employee'}],
@@ -145,6 +145,9 @@ patterns_crime = [
 [{'LEMMA': 'offender'}],
 [{'LEMMA': 'sentence'}],
 [{'LEMMA': 'sentencing'}],
+[{'LEMMA': 'domestic'}, {'LEMMA': 'violence'}],
+[{'LEMMA': 'witness'}],
+[{'LEMMA': 'stop'}, {'LEMMA': 'and'}, {'LEMMA': 'search'}],
     ]
 
 
@@ -164,6 +167,8 @@ patterns_environment = [
 [{'LEMMA': 'energy'}],
 [{'LEMMA': 'nature'}],
 [{'LEMMA': 'natural'}],
+[{'LEMMA': 'recycle'}],
+[{'LEMMA': 'fly'}, {'LEMMA': '-'}, {'LEMMA': 'tipping'}],
     ]
 
 #Inequalities/Wellbeing
@@ -229,7 +234,7 @@ patterns_defence = [
 [{'LEMMA': 'security'}],
 [{'LEMMA': 'cyber'}],
 [{'LEMMA': 'intelligence'}],
-
+[{'LEMMA': 'warhead'}],
     ]
 
 
@@ -247,6 +252,8 @@ patterns_foreignpolicy = [
 # Housing
 
 patterns_housing = [
+[{'OP': '!'}, {'LEMMA': 'public'}, {'LEMMA': 'house'}], #exclude 'public house'
+[{'OP': '!'}, {'LEMMA': 'house'}, {'LEMMA': 'of'}], #exclude 'house of..' (e.g. house of commons, lords etc.)
 [{'LEMMA': 'house'}],
 [{'LEMMA': 'housing'}],
 [{'LEMMA': 'landlord'}],
