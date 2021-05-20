@@ -125,8 +125,8 @@ patterns_labourmarket = [
 [{'LEMMA': 'employment'}],
 [{'LEMMA': 'employee'}],
 [{'LEMMA': 'employer'}],
-[{'LEMMA': {'NOT_IN': ['social']}, "OP": "*"}, {"LEMMA": "work"}],  #include work - but exclude 'social work'
-[{'LEMMA': 'worker'}],
+[{'LEMMA': {'NOT_IN': ['social']}, "OP": "+"}, {"LEMMA": "work"}],  #include work - but exclude 'social work'
+[{'LEMMA': {'NOT_IN': ['social']}, "OP": "+"}, {'LEMMA': 'worker'}],
 [{'LEMMA': 'redundancy'}],
     ]
 
@@ -251,7 +251,7 @@ patterns_foreignpolicy = [
 # Housing
 
 patterns_housing = [
-[{'LEMMA': {'NOT_IN': ['public']}, 'OP': '*'}, {'LEMMA': 'house'}, {'LEMMA': {'NOT_IN': ['of']}, 'OP': '*'}], #include house but exclude 'public house' & 'house of..' (e.g. house of commons, lords etc.)
+[{'LEMMA': {'NOT_IN': ['public']}, 'OP': '?'}, {'LEMMA': 'house'}, {'LEMMA': {'NOT_IN': ['of']}, 'OP': '?'}], #include house but exclude 'public house' & 'house of..' (e.g. house of commons, lords etc.)
 [{'LEMMA': 'housing'}],
 [{'LEMMA': 'landlord'}],
 [{'LEMMA': 'tenant'}],
@@ -304,7 +304,41 @@ def get_matches(text):
     return 'OTHER'
 
 #test matcher
-get_matches("people out of social work") #test for multiple matches - not working atm
+get_matches("public house regulations") #test for multiple matches - not working atm
+
+#pre-processing for cases where default sequence can be lead to misclassification
+def preprocessing(text):
+    text_lowercase = text.lower()
+    doc = nlp(text_lowercase)
+    for token in doc:
+        if token.text == "public":  #public house - should be other not housing
+            if doc[token.i].nbor().text == "house":
+                with doc.retokenize() as retokenizer:
+                        attrs = {"LEMMA": "publichouse"}
+                        doc = retokenizer.merge(doc[token.i:token.i+1], attrs=attrs)
+            else:
+                pass
+        elif token.text == "house": #house of... (commons/lords etc.) - should be other not housing
+            if doc[token.i].nbor().text == "of":
+                with doc.retokenize() as retokenizer:
+                        attrs = {"LEMMA": "houseof"}
+                        doc = retokenizer.merge(doc[token.i:token.i+1], attrs=attrs)
+            else:
+                pass   
+        elif token.text == "social": #social work/workers - should be other not employment
+            if doc[token.i].nbor().text == "work" or doc[token.i].nbor().text == "worker":
+                with doc.retokenize() as retokenizer:
+                        attrs = {"LEMMA": "socialwork"}
+                        doc = retokenizer.merge(doc[token.i:token.i+1], attrs=attrs)
+            else:
+                pass
+        else:
+            pass
+    return doc
+            
+preprocessing("closure of public house.")
+
+
 
 # identify topics from debate title
 df['topic'] = df["agenda"].apply(lambda x : get_matches(x))
