@@ -45,10 +45,10 @@ manualtopics = "data/unmatched-debates--manual-topics.xlsx"
 # --- Data Prep ---
 
 # create dataframe
-df = pd.read_csv(inputfile)
+df_full = pd.read_csv(inputfile)
 
 # cut down to one row per debate & take 10% sample of this -> use seed so re-running during development is consistent
-df = df.drop_duplicates(subset=['agenda']).sample(frac=0.1, random_state=1)
+df = df_full.drop_duplicates(subset=['agenda']).sample(frac=0.1, random_state=1)
 
 
 # set up nlp pipeline
@@ -125,8 +125,8 @@ patterns_labourmarket = [
 [{'LEMMA': 'employment'}],
 [{'LEMMA': 'employee'}],
 [{'LEMMA': 'employer'}],
-[{'LEMMA': {'NOT_IN': ['social']}, "OP": "+"}, {"LEMMA": "work"}],  #include work - but exclude 'social work'
-[{'LEMMA': {'NOT_IN': ['social']}, "OP": "+"}, {'LEMMA': 'worker'}],
+[{"LEMMA": "work"}],
+[{'LEMMA': 'worker'}],
 [{'LEMMA': 'redundancy'}],
     ]
 
@@ -251,7 +251,7 @@ patterns_foreignpolicy = [
 # Housing
 
 patterns_housing = [
-[{'LEMMA': {'NOT_IN': ['public']}, 'OP': '?'}, {'LEMMA': 'house'}, {'LEMMA': {'NOT_IN': ['of']}, 'OP': '?'}], #include house but exclude 'public house' & 'house of..' (e.g. house of commons, lords etc.)
+[{'LEMMA': 'house'}],
 [{'LEMMA': 'housing'}],
 [{'LEMMA': 'landlord'}],
 [{'LEMMA': 'tenant'}],
@@ -306,42 +306,79 @@ def get_matches(text):
 #test matcher
 get_matches("public house regulations") #test for multiple matches - not working atm
 
+
+
 #pre-processing for cases where default sequence can be lead to misclassification
+
+#my function that doesn't seem to do anything to the text at the moment
 def preprocessing(text):
     text_lowercase = text.lower()
     doc = nlp(text_lowercase)
     for token in doc:
-        if token.text == "public":  #public house - should be other not housing
-            if doc[token.i].nbor().text == "house":
-                with doc.retokenize() as retokenizer:
-                        attrs = {"LEMMA": "publichouse"}
-                        doc = retokenizer.merge(doc[token.i:token.i+1], attrs=attrs)
-            else:
-                pass
-        elif token.text == "house": #house of... (commons/lords etc.) - should be other not housing
-            if doc[token.i].nbor().text == "of":
-                with doc.retokenize() as retokenizer:
-                        attrs = {"LEMMA": "houseof"}
-                        doc = retokenizer.merge(doc[token.i:token.i+1], attrs=attrs)
-            else:
-                pass   
-        elif token.text == "social": #social work/workers - should be other not employment
-            if doc[token.i].nbor().text == "work" or doc[token.i].nbor().text == "worker":
-                with doc.retokenize() as retokenizer:
-                        attrs = {"LEMMA": "socialwork"}
-                        doc = retokenizer.merge(doc[token.i:token.i+1], attrs=attrs)
-            else:
-                pass
+        if token.text == "public" and doc[token.i].nbor().text == "house":  #public house - should be other not housing
+            with doc.retokenize() as retokenizer:
+                attrs = {"LEMMA": "publichouse"}
+                retokenizer.merge(doc[token.i:token.i+1], attrs=attrs)
+
+        # elif token.text == "house": #house of... (commons/lords etc.) - should be other not housing
+        #     if doc[token.i].nbor().text == "of":
+        #         with doc.retokenize() as retokenizer:
+        #                 attrs = {"LEMMA": "houseof"}
+        #                 doc = retokenizer.merge(doc[token.i:token.i+1], attrs=attrs)
+        #     else:
+        #         pass   
+        # elif token.text == "social": #social work/workers - should be other not employment
+        #     if doc[token.i].nbor().text == "work" or doc[token.i].nbor().text == "worker":
+        #         with doc.retokenize() as retokenizer:
+        #                 attrs = {"LEMMA": "socialwork"}
+        #                 doc = retokenizer.merge(doc[token.i:token.i+1], attrs=attrs)
+        #     else:
+        #         pass
         else:
             pass
-    return doc
-            
-preprocessing("closure of public house.")
+    return print([(idx,tok) for idx,tok in enumerate(doc)])      
+
+      
+#function that (mostly) works -- merges tokens together but includes too many tokens atm, i think because I haven't edited the 'while end < len(doc)' line?
+def preprocess(doc):
+    spans = []
+    for word in doc[:-1]:
+        if word.text != "public" and word.nbor(1).text != "house":
+            continue
+        start = word.i
+        end = word.i + 1
+        print(start,end)
+        while end < len(doc):
+            end += 1
+        span = doc[start:end]
+        print(span)
+        spans.append(span)
+    with doc.retokenize() as retokenizer:
+        for span in spans:
+            retokenizer.merge(span)
+    return doc.text
+
+
+#testing preprocessing functions
+preprocessing("closure of public house things")
+
+doc = nlp("closure of public house things")
+
+
+preprocess(doc)
+
+print([(idx,tok) for idx,tok in enumerate(doc)])
 
 
 
-# identify topics from debate title
+
+# identify topics from debate title for subset
 df['topic'] = df["agenda"].apply(lambda x : get_matches(x))
+
+#identify topics from debate title for full dataset
+df_full_uniquedebates = df_full.drop_duplicates(subset=['agenda'])
+df_full_uniquedebates['topic'] = df_full_uniquedebates['agenda'].apply(lambda x : get_matches(x))
+print(df_full_uniquedebates['topic'].value_counts(normalize=True))
 
 # output sample of 200 - evaluating rules based approach
 df_evaluation = df.sample(frac=0.2, random_state=1)
