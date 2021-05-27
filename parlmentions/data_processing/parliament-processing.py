@@ -8,14 +8,14 @@ Created on Tue Apr  6 14:17:20 2021
 
 
 # --- Libraries ---
-from scripts.functions.df_prep import find_ons_mentions
-from scripts.functions.df_prep import create_date_variables
-from scripts.functions.df_prep import context_slicer
+from parlmentions.functions.df_prep import find_ons_mentions
+from parlmentions.functions.df_prep import create_date_variables
+from parlmentions.functions.df_prep import context_slicer
 
 # --- Variables ---
 
 #parliament speech data
-inputfile = "data/commonsdebates_2015_2019-utf8.csv"
+inputfile = "raw-data/commonsdebates_2015_2019-utf8.csv"
 
 #keywords to search for in speeches
 keywords = ["ONS","Office for National Statistics", "Office of National Statistics", "UKSA", "UK Statistics Authority", "OSR", "Office for Statistics Regulation", "Office of Statistics Regulation"]

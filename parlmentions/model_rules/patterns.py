@@ -1,57 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Apr 28 09:49:54 2021
+Created on Thu May 27 13:33:54 2021
 
 @author: corber
-
-
-Identifying topics of each debate using a rules-based approach
-
-Topics suggested by Millie Tyler:
-    
-Census
-Health
-COVID-19
-Population and Migration
-Economy
-Labour Market
-Crime
-Environment
-Inequalities/Wellbeing
-
 """
 
-# --- Libraries ---
 
-import pandas as pd
-import spacy
-from spacy.matcher import Matcher
-#import patterns as dictionary
-
-
-
-# --- Variables ---
-
-#parliament speech dataset
-inputfile = "data/commonsdebates_2015_2019-utf8.csv"
-
-#manually classified debate list
-manualtopics = "data/unmatched-debates--manual-topics.xlsx"
-
-
-
-# --- Data Prep ---
-
-# create dataframe
-df_full = pd.read_csv(inputfile)
-
-# set up nlp pipeline
-nlp = spacy.load("en_core_web_md")
-lemmatizer = nlp.get_pipe("lemmatizer")
-
-# --- Topic Classification --- 
-
-# -- Patterns for matching --
+# -- Patterns for rules based topic classification --
 
 
 #Exceptions - catching these before they can be incorrectly picked up by another pattern
@@ -273,50 +228,3 @@ patterns_taxspend= [
 [{'LEMMA': 'benefit'}],
     ]
 
-
-# -- Set up matcher in pipeline --
-matcher = Matcher(nlp.vocab, validate=True)
-
-#for loop over items in patterns dictionary to add them to the matcher
-
-
-matcher.add("EXCEPTIONS", patterns_exceptions)
-matcher.add("CENSUS", patterns_census)
-matcher.add("HEALTH", patterns_health)
-matcher.add("POPULATION_MIGRATION", patterns_popmigration)
-matcher.add("ECONOMY", patterns_economy)
-matcher.add("LABOURMARKET", patterns_labourmarket)
-matcher.add("CRIME", patterns_crime)
-matcher.add("ENVIRONMENT", patterns_environment)
-matcher.add("INEQUAL_WELLBEING", patterns_inequalwellbeing)
-matcher.add("EDUCATION", patterns_education)
-matcher.add("TRANSPORT", patterns_transport)
-matcher.add("DEFENCE", patterns_defence)
-matcher.add("FOREIGNPOLICY", patterns_foreignpolicy)
-matcher.add("HOUSING", patterns_housing)
-matcher.add("TAXSPEND", patterns_taxspend)
-
-
-# -- Matching --
-
-# function for finding matches -- ISSUE: only returns first match, doesn't handle text that may have more than 1 match
-def get_matches(text):
-    text_lowercase = text.lower() #force text to all lower case
-    doc = nlp(text_lowercase) #convert text to nlp object
-    rootdoc = lemmatizer(doc) #lemmatize the entire text
-    matcher(rootdoc) #apply matching rules to lemmatized text
-    for match_id in matcher(rootdoc):
-        return rootdoc.vocab.strings[match_id[0]] # match_id returns tuple of 3 ints: hashed ID, start, end (see: https://spacy.io/usage/spacy-101#vocab)
-    return 'OTHER'
-
-
-#identify topics from debate title for full dataset
-df_full_uniquedebates = df_full.drop_duplicates(subset=['agenda']) #create df with only unique debate titles
-df_full_uniquedebates['topic'] = df_full_uniquedebates['agenda'].apply(lambda x : get_matches(x))
-df_full_uniquedebates['topic'] = df_full_uniquedebates['topic'].str.replace('EXCEPTIONS', 'OTHER', case=True, regex=None) #recode exceptions into 'other' category
-
-
-
-
-
-    

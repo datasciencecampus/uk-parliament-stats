@@ -13,55 +13,12 @@ import requests
 from requests.exceptions import ProxyError
 import time
 import os.path
+from parlmentions.functions.ons_network import set_ons_proxies
 
-#set local path for desired download location - default is within project
-localpath = 'data/uk-plt-xml/'
+#variables
+localpath = 'raw-data/uk-plt-xml/' #set local path for desired download location - default is within project
+hansardlinks_xlsx = "raw-data/hansard-link-prep.xlsx" #list of files to download
 
-
-#set ONS proxy function
-
-def set_ons_proxies(ssl=False):
-    """
-    The ONS uses two proxy servers, this function finds the right
-    one and saves them in a dictionary for requests.
-    
-    Parameters
-    ----------
-    ssl: filepath to the CA certificate for SSL verification
-    
-    """
-    # Try each proxy in the following order.
-    proxy_list = [
-        "http://10.173.135.52:8080",
-        "http://CR1-PSG-DMZ-VIP:8080",
-        "http://CR2-PSG-DMZ-VIP:8080",
-    ]
-
-    test_url = "https://www.google.co.uk/"
-    stop_at = len(proxy_list)-1    
-    
-    for i, proxy in enumerate(proxy_list):
-        proxies = {'http': proxy, 'https': proxy}
-        
-        if i != stop_at:
-            try:
-                requests.get(test_url, proxies=proxies, verify=ssl)
-                break
-            except requests.exceptions.ProxyError:
-                print(f"Proxy {proxy} not working. Changing to {proxy_list[i+1]}.")
-        else:
-            try:
-                requests.get(test_url, proxies=proxies, verify=ssl)
-            except requests.exceptions.ProxyError:
-                raise requests.exceptions.ProxyError(
-                    "None of the provided proxies work. Check for new proxy settings."
-                )
-
-    return proxies
-
-
-#input data
-hansardlinks_xlsx = "data/hansard-link-prep.xlsx"
 
 #read in hansard xlsx & pull into dataframe - append sheetname as additional column
 hansardlinks_sheetnames = pd.read_excel(hansardlinks_xlsx, sheet_name=None)
