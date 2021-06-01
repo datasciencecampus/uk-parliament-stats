@@ -50,31 +50,12 @@ lemmatizer = nlp.get_pipe("lemmatizer")
 
 # --- Topic Classification --- 
 
-# -- Import patterns --
-patterns_dict = {
- "EXCEPTIONS": patterns.patterns_exceptions,
- "CENSUS": patterns.patterns_census,
- "HEALTH": patterns.patterns_health,
- "POPULATION_MIGRATION": patterns.patterns_popmigration,
- "ECONOMY": patterns.patterns_economy,
- "LABOURMARKET": patterns.patterns_labourmarket,
- "CRIME": patterns.patterns_crime,
- "ENVIRONMENT": patterns.patterns_environment,
- "INEQUAL_WELLBEING": patterns.patterns_inequalwellbeing,
- "EDUCATION": patterns.patterns_education,
- "TRANSPORT": patterns.patterns_transport,
- "DEFENCE": patterns.patterns_defence,
- "FOREIGNPOLICY": patterns.patterns_foreignpolicy,
- "HOUSING": patterns.patterns_housing,
- "TAXSPEND": patterns.patterns_taxspend,
-}
-
 
 # -- Set up matcher in pipeline --
 matcher = Matcher(nlp.vocab, validate=True)
 
 #for loop over items in patterns dictionary to add them to the matcher
-for key, value in patterns_dict.items():
+for key, value in patterns.patterns_dict.items():
     matcher.add(key, value)
 
 

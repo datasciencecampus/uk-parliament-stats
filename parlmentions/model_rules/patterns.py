@@ -228,3 +228,23 @@ patterns_taxspend= [
 [{'LEMMA': 'benefit'}],
     ]
 
+
+## Create patterns dictionary
+
+patterns_dict = {
+ "EXCEPTIONS": patterns_exceptions,
+ "CENSUS": patterns_census,
+ "HEALTH": patterns_health,
+ "POPULATION_MIGRATION": patterns_popmigration,
+ "ECONOMY": patterns_economy,
+ "LABOURMARKET": patterns_labourmarket,
+ "CRIME": patterns_crime,
+ "ENVIRONMENT": patterns_environment,
+ "INEQUAL_WELLBEING": patterns_inequalwellbeing,
+ "EDUCATION": patterns_education,
+ "TRANSPORT": patterns_transport,
+ "DEFENCE": patterns_defence,
+ "FOREIGNPOLICY": patterns_foreignpolicy,
+ "HOUSING": patterns_housing,
+ "TAXSPEND": patterns_taxspend,
+}
