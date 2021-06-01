@@ -40,6 +40,8 @@ for key, value in patterns.patterns_dict.items():
     matcher.add(key, value)
 
 
+
+
 # -- Matching Functions --
 
 # function for identifying a match on a piece of text -- ISSUE: only returns first match, doesn't handle text that may have more than 1 match

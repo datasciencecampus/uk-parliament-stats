@@ -48,3 +48,10 @@ def extract_context (df):
     #apply slicer to string row by row
     df["context"] = df.apply(lambda row: context_slicer(row), axis=1)
     return df
+
+
+#Drop unnecessary columns
+
+def remove_columns(df):
+    df = df.drop(['party.facts.id', 'iso3country', 'year', 'weeknum', 'keyword_location', 'context-start', 'context-stop'], axis=1)
+    return df
