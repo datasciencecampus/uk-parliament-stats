@@ -30,28 +30,9 @@ from spacy.matcher import Matcher
 
 
 
-# --- Variables ---
-
-#parliament speech dataset
-inputfile = "raw-data/commonsdebates_2015_2019-utf8.csv"
-
-#output location
-outputfile = "outputs/data/uk_parl_stats.csv"
-
-
-# --- Data Prep ---
-
-# create dataframe
-df_full = pd.read_csv(inputfile)
-
 # set up nlp pipeline
 nlp = spacy.load("en_core_web_md")
 lemmatizer = nlp.get_pipe("lemmatizer")
-
-# --- Topic Classification --- 
-
-
-# -- Set up matcher in pipeline --
 matcher = Matcher(nlp.vocab, validate=True)
 
 #for loop over items in patterns dictionary to add them to the matcher
@@ -59,9 +40,9 @@ for key, value in patterns.patterns_dict.items():
     matcher.add(key, value)
 
 
-# -- Matching --
+# -- Matching Functions --
 
-# function for finding matches -- ISSUE: only returns first match, doesn't handle text that may have more than 1 match
+# function for identifying a match on a piece of text -- ISSUE: only returns first match, doesn't handle text that may have more than 1 match
 def get_matches(text):
     text_lowercase = text.lower() #force text to all lower case
     doc = nlp(text_lowercase) #convert text to nlp object
@@ -72,17 +53,15 @@ def get_matches(text):
     return 'OTHER'
 
 
-#identify topics from debate title for full dataset
-df_full_uniquedebates = df_full.drop_duplicates(subset=['agenda']) #create df with only unique debate titles
-df_full_uniquedebates['topic'] = df_full_uniquedebates['agenda'].apply(lambda x : get_matches(x))
-df_full_uniquedebates['topic'] = df_full_uniquedebates['topic'].str.replace('EXCEPTIONS', 'OTHER', case=True, regex=None) #recode exceptions into 'other' category
-
-#join topics from unique debates to full dataset
-df_full = df_full.merge(df_full_uniquedebates, on='agenda', suffixes=(None, "_dropme"))
-#drop duplicate fields
-output = df_full.loc[:,~df_full.columns.str.contains('_dropme', case=False)] 
-#output to csv
-output.to_csv(outputfile)
+# classifying debates in a dataframe by topic 
+def classify_debates(df):
+    #use matcher on dataframe supplied
+    df_uniquedebates = df.drop_duplicates(subset=['agenda']) #create df with only unique debate titles - speeds up processing
+    df_uniquedebates['topic'] = df_uniquedebates['agenda'].apply(lambda x : get_matches(x)) #identify matches row by row
+    df_uniquedebates['topic'] = df_uniquedebates['topic'].str.replace('EXCEPTIONS', 'OTHER', case=True, regex=None) #recode exceptions into 'other' category
+    output_df = df.merge(df_uniquedebates, on='agenda', suffixes=(None, "_dropme")) #join topics from unique debates onto full dataset, duplicate fields get '_dropme' suffix
+    output_df = output_df.loc[:,~output_df.columns.str.contains('_dropme', case=False)] #drop duplicate fields create in join
+    return output_df
 
 
 
