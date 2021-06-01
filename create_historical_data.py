@@ -11,18 +11,21 @@ import pandas as pd
 from parlmentions.functions.df_prep import find_ons_mentions
 from parlmentions.functions.df_prep import create_date_variables
 from parlmentions.functions.df_prep import extract_context
-from parlmentions.data_processing.parliament_processing import keywords
+from parlmentions.data_processing import parliament_processing
 from parlmentions.model_rules.topic_classification import classify_debates
 
 # function to call all processing functions to create processed csv for use in dashboard
 
-def create_historical_data (inputfile, outputfile = "outputs/data/uk_parl_stats.csv"):
+keywords = parliament_processing.keywords
+
+def create_historical_data (inputfile, keywords=keywords, outputfile = "outputs/data/uk_parl_stats.csv"):
     # create dataframe from csv
+    print("0/6 - Reading CSV..." )
     df = pd.read_csv(inputfile)
     print("1/6 - Read CSV in")
     
     # tag speeches with ONS mentions in dataframe
-    df = find_ons_mentions(inputfile, keywords)
+    df = find_ons_mentions(df, keywords)
     print("2/6 - Identified mentions of ONS")
 
     # create dates & week numbering
@@ -43,6 +46,7 @@ def create_historical_data (inputfile, outputfile = "outputs/data/uk_parl_stats.
     
     
     
-    
+
+
 # call function
 create_historical_data(inputfile = "raw-data/commonsdebates_2015_2019-utf8.csv")
