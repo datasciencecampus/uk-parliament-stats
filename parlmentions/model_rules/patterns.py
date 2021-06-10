@@ -62,6 +62,7 @@ patterns_economy = [
 [{'LOWER': 'gdp'}], #GDP acronym
 [{'LEMMA': 'sme'}], #SME acronym
 [{'LEMMA': 'economy'}],
+[{'LEMMA': 'economics'}],
 [{'LEMMA': 'borrow'}],
 [{'LEMMA': 'finance'}],
 [{'LEMMA': 'goods'}],
@@ -109,6 +110,7 @@ patterns_crime = [
 #Environment
 patterns_environment = [
 [{'LEMMA': 'environment'}],
+[{'LEMMA': 'environmental'}],
 [{'LEMMA': 'climate'}],
 [{'LEMMA': 'green'}],
 [{'LEMMA': 'carbon'}],
@@ -197,6 +199,7 @@ patterns_defence = [
 
 patterns_foreignpolicy = [
 [{'LOWER': 'eu'}], #acronym - EU
+[{'LOWER': 'brexit'}], #probably doesn't matter if set as lower or lemma but lower feels safer as it's a fairly new 'word' 
 [{'LEMMA': 'european'}, {'LEMMA': 'union'}],
 [{'LEMMA': 'europe'}],
 [{'LEMMA': 'withdrawal'}], #i.e. Withdrawal Agreement
