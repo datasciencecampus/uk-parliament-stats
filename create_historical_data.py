@@ -27,28 +27,34 @@ def create_historical_data (inputfile, keywords=keywords, outputfile = "outputs/
     print("1/7 - Read CSV in")
     
     # tag speeches with ONS mentions in dataframe
+    print("2/7 - Identifying mentions of ONS...")
     df = find_ons_mentions(df, keywords)
-    print("2/7 - Identified mentions of ONS")
+
 
     # create dates & week numbering
+    print("3/7 - Creating date variables...")
     df = create_date_variables(df)
-    print("3/7 - Created date variables")
+
     
     # extract context around keyword mention
+    print("4/7 - Extracting context around mention...")
     df = extract_context(df)
-    print("4/7 - Extracted context around mention")
+
     
     # classify debates by topic
+    print("5/7 - Classifying debates...")
     df = classify_debates(df)
-    print("5/7 - Classified debates")
+
 
     #remove unnecessary columns before saving the output
+    print("6/7 - Removing unnecessary columns...")
     df = remove_columns(df)
-    print("6/7 - Removed unnecessary columns")
+
 
     #output to csv - drop index
+    print("7/7 - Saving data to CSV...")
     df.to_csv(outputfile, index = False)
-    print("7/7 - Output data to CSV - Complete")
+    print("Done!")
     return
   
 # call function
