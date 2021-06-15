@@ -15,6 +15,7 @@ def find_ons_mentions (df, keywords):
     ons_search_terms = '|'.join(keywords) #group keywords together, use '|' to separate and allow str.contains function to parse as logical OR (function accepts regex pattern)
     df["match"] = df["text"].str.contains(ons_search_terms) #create T/F flag in 'match' for any speeches that contain keywords - case sensitive (as otherwise 'ons' will match on a LOT).
     df["match_name"] = df["text"].str.findall(ons_search_terms) #return keyword that was mentioned in new column
+    df["match_name"] = df["match_name"].str[0] #only keep first search term that was found
     return df
 
 
@@ -34,8 +35,8 @@ def create_date_variables (df):
 
 #Extract context from either side of ONS mention
 
-def find_ons_names_location(row):
-    return row["text"].str.find(row["match_name"])
+def find_ons_names_location (row):
+    return row["text"].find(row.match_name)
 
 def context_slicer (row):
     return row["text"][row["context-start"]:row["context-stop"]]
@@ -56,6 +57,6 @@ def extract_context (df):
 
 #Drop unnecessary columns
 
-def remove_columns(df):
+def remove_columns (df):
     df = df.drop(['party.facts.id', 'iso3country', 'year', 'weeknum', 'ons_name_location', 'context-start', 'context-stop'], axis=1)
     return df

@@ -30,7 +30,6 @@ def create_historical_data (inputfile, keywords=keywords, outputfile = "outputs/
     print("2/7 - Identifying mentions of ONS...")
     df = find_ons_mentions(df, keywords)
 
-
     # create dates & week numbering
     print("3/7 - Creating date variables...")
     df = create_date_variables(df)
