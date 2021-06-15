@@ -15,6 +15,10 @@ from parlmentions.functions.df_prep import extract_context
 from parlmentions.functions.df_prep import remove_columns
 from parlmentions.model_rules.topic_classification import classify_debates
 
+#Variables
+
+rawdatafile = "raw-data/commonsdebates_2015_2019-utf8.csv"
+
 # function to call all processing functions to create processed csv for use in dashboard
 def create_historical_data (inputfile, keywords=keywords, outputfile = "outputs/data/uk_parl_stats.csv"):
     # create dataframe from csv
@@ -48,4 +52,4 @@ def create_historical_data (inputfile, keywords=keywords, outputfile = "outputs/
     return
   
 # call function
-create_historical_data(inputfile = "raw-data/commonsdebates_2015_2019-utf8.csv")
+create_historical_data(inputfile = rawdatafile)
