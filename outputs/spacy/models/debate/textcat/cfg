@@ -1,0 +1,21 @@
+{
+  "labels":[
+    "CENSUS",
+    "HEALTH",
+    "POPULATION_MIGRATION",
+    "ECONOMY",
+    "LABOURMARKET",
+    "CRIME",
+    "ENVIRONMENT",
+    "INEQUAL_WELLBEING",
+    "EDUCATION",
+    "TRANSPORT",
+    "DEFENCE",
+    "FOREIGNPOLICY",
+    "HOUSING",
+    "TAXSPEND",
+    "OTHER"
+  ],
+  "threshold":0.5,
+  "positive_label":null
+}

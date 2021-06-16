@@ -1,6 +1,4 @@
 # Directories #
-raw-data/
-outputs/
 jh-project-notes/
 
 
@@ -11,6 +9,9 @@ jh-project-notes/
 *.rds
 *.csv
 *.xlsx
+*.xlsm
 *.xml
 *.tsv
 *.spacy
+*.txt
+*.hyper
