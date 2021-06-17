@@ -34,6 +34,22 @@ def create_date_variables (df):
     df["week"] = df["year"].astype(str) + "-" + df["weeknum"].astype(str)
     return df
 
+#Create Hansard URL based on date
+
+def hansard_link_row (row):
+    if row["parliament"] == "UK-HouseOfCommons":
+        return "https://hansard.parliament.uk/commons/"+row["date"].strftime('%Y-%m-%d')
+    else:
+        return "https://hansard.parliament.uk/lords/"+row["date"].strftime('%Y-%m-%d')
+
+
+def create_hansard_url (df):
+    #if location = commons then x, elseif location = lords then y etc. <- need to fully implement when pulling in full range of data
+    df["hansard_url"] = ""
+    df["hansard_url"] = df.apply(lambda row: hansard_link_row(row), axis=1)
+    return df
+
+
 #Extract context from either side of ONS mention
 
 def find_ons_names_location (row):
