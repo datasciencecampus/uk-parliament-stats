@@ -11,6 +11,7 @@ import pandas as pd
 from parlmentions.data_processing.keywords import keywords as keywords
 from parlmentions.functions.df_prep import find_ons_mentions
 from parlmentions.functions.df_prep import create_date_variables
+from parlmentions.functions.df_prep import create_hansard_url
 from parlmentions.functions.df_prep import extract_context
 from parlmentions.functions.df_prep import remove_columns
 from parlmentions.model_rules.topic_classification import classify_debates
@@ -30,9 +31,10 @@ def create_historical_data (inputfile, keywords=keywords, outputfile = "outputs/
     print("2/7 - Identifying mentions of ONS...")
     df = find_ons_mentions(df, keywords)
 
-    # create dates & week numbering
-    print("3/7 - Creating date variables...")
+    # create variables: dates & week numbering, hansard URLs
+    print("3/7 - Creating variables...")
     df = create_date_variables(df)
+    df = create_hansard_url(df)
 
     
     # extract context around keyword mention
