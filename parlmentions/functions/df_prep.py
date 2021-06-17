@@ -16,6 +16,7 @@ def find_ons_mentions (df, keywords):
     df["match"] = df["text"].str.contains(ons_search_terms) #create T/F flag in 'match' for any speeches that contain keywords - case sensitive (as otherwise 'ons' will match on a LOT).
     df["match_name"] = df["text"].str.findall(ons_search_terms) #return keyword that was mentioned in new column
     df["match_name"] = df["match_name"].str[0] #only keep first search term that was found
+    df["match_name"] = df.match_name.fillna('no match') #replace NaN with empty string - needs to be str for use in extract_context func
     return df
 
 
@@ -39,12 +40,16 @@ def find_ons_names_location (row):
     return row["text"].find(row.match_name)
 
 def context_slicer (row):
-    return row["text"][row["context-start"]:row["context-stop"]]
+    #only return the context for speeches that mention the ONS 
+    if row["match"]:
+        return row["text"][row["context-start"]:row["context-stop"]]
+    else:
+        return ""
 
 def extract_context (df):
     df["ons_name_location"] = df.apply(lambda row: find_ons_names_location(row), axis=1) #find character location of relevant ons search term
     #create start/stop character locations for extracting context, cap at 0 & max length of str
-    df["context-start"] = df["ons_name_location"]-150
+    df["context-start"] = df["ons_name_location"]-200
     df["context-stop"] = df["ons_name_location"]+200
     #if the context start is negative, cap at 0 (don't want to take something from the end of the string!)
     df.loc[df["context-start"] < 0, 'context-start'] = 0
