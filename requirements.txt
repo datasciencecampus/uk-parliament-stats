@@ -5,12 +5,9 @@ os
 
 
 #data prep
-
 pandas
-#dplyr [R PACKAGE - google this]
 
 #nlp
-
 spacy
 string
 sklearn
