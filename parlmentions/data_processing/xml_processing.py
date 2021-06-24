@@ -63,16 +63,32 @@ for i in range(0,len(paragraph_id)):
 # create dataframes 
 df_debate = pd.DataFrame(data_debate, columns = ['debate_id','debate_text'])
 print(df_debate)
-df_debate.dtypes
+
 
 df_speech = pd.DataFrame(data_speech, columns = ['speech_id','speaker_name'])
+#extract string after end of date (e.g. in dev file - 'a.1677.3')
+df_speech["merge_id"] = df_speech["speech_id"].str.split('\d*-\d*-\d*', n=1)
+df_speech["merge_id"] = df_speech["merge_id"].str[1]
 print(df_speech)
-df_speech.dtypes
+
+
 
 
 df_paragraph = pd.DataFrame(data_paragraph, columns = ['paragraph_id','speech'])
+#extract string before '/'
+df_paragraph["merge_id"] = df_paragraph["paragraph_id"].str.split('/', n=1)
+df_paragraph["merge_id"] = df_paragraph["merge_id"].str[0]
 print(df_paragraph)
-df_paragraph.dtypes
+
+
+#combine speech & paragraph dfs
+df = df_speech.merge(df_paragraph, on = "merge_id")
+
+
+#NEXT: 
+    # need to bring in debate for each part of speech
+    # need to concat speech paragraphs together
+
     
 
 
