@@ -84,10 +84,17 @@ print(df_paragraph)
 #combine speech & paragraph dfs
 df = df_speech.merge(df_paragraph, on = "merge_id")
 
+#concat speech paragraphs together (so we have 1 row per speech)
+df.fillna("",inplace=True) #fill None in strings with blank
+df_merged_speech = df.groupby('merge_id')['speech'].agg(lambda col: '\n\n'.join(col)) #join speech rows together with 2 newlines
+#join merged speech back into dataset
+df_temp = df.drop(columns=['paragraph_id', 'speech']) #remove paragraph_id & speech columns
+df_temp = df_temp.drop_duplicates(subset=["merge_id"]) #drop duplicates on remaining rows - so we have 1 row per speech
+df_full = df_temp.merge(df_merged_speech, on = "merge_id") #join in full speech 
+
 
 #NEXT: 
     # need to bring in debate for each part of speech
-    # need to concat speech paragraphs together
 
     
 
