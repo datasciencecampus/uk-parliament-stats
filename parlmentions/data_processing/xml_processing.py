@@ -67,8 +67,17 @@ for i in range(0,len(paragraph_id)):
 
 # create dataframes 
 df_debate = pd.DataFrame(data_debate, columns = ['debate_id','debate_text'])
-df_debate.sort_values('debate_id', inplace=True)
+df_debate.sort_values('debate_id', inplace=True) #arrange major & minor headings in order in which they occurred
+#extract merge id as below for speech
+df_debate["merge_id"] = df_debate["debate_id"].str.split('\d*-\d*-\d*', n=1)
+df_debate["merge_id"] = df_debate["merge_id"].str[1]
+#extract numbers
+df_debate["merge_id"] = df_debate["merge_id"].str.extract(r'(\d+\D\d+)')
 
+#>>>
+#anything with 1 digit after the dp gets a left pad 0 (e.g. .3 -> .03) 
+# should then be ready to do merge_asof further down
+#>>>
 
 df_speech = pd.DataFrame(data_speech, columns = ['speech_id','speaker_name'])
 #extract string after end of date (e.g. in dev file - 'a.1677.3')
@@ -95,6 +104,8 @@ df_temp = df.drop(columns=['paragraph_id', 'speech']) #remove paragraph_id & spe
 df_temp = df_temp.drop_duplicates(subset=["merge_id"]) #drop duplicates on remaining rows - so we have 1 row per speech
 df_full = df_temp.merge(df_merged_speech, on = "merge_id") #join in full speech 
 
+#merge debate titles with speech dataframe
+# pd.merge_asof(df_full, df_debate, on = ""
 
 #NEXT: 
     # need to bring in debate for each part of speech
@@ -115,6 +126,3 @@ df_full = df_temp.merge(df_merged_speech, on = "merge_id") #join in full speech
 # move xml to staging folder after processing complete
 
 # clean-up function to delete xml files in staging folder - have this as separate manual step to avoid accidental deletion. Eventually could be built in to be run 1/month?
-
-
-
