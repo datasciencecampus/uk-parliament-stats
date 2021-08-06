@@ -78,19 +78,23 @@ df_debate["merge_id"] = df_debate["debate_id"].str.split('\d*-\d*-\d*', n=1)
 df_debate["merge_id"] = df_debate["merge_id"].str[1]
 
 #sort out merge id numbers & convert to float
-df_debate["merge_id_check"] = df_debate['merge_id'].str[-2:]
-df_debate["merge_id_check"] = df_debate["merge_id_check"].str.replace("\\.", "", regex = True)
+    #identify if speech number needs padding & pad where required
+df_debate["merge_id_padded"] = df_debate['merge_id'].str[-2:]
+df_debate["merge_id_padded"] = df_debate["merge_id_padded"].str.replace("\\.", "", regex = True) #special characters need to be escaped '\\'
+df_debate['merge_id_padded'] = np.where(df_debate['merge_id_padded'].str.len() == 1, df_debate['merge_id_padded'].str.pad(width=2, side='left', fillchar='0'), df_debate['merge_id_padded']) 
 
-df_debate['merge_id_test'] = np.where(df_debate['merge_id_check'].str.len() == 1, df_debate['merge_id_check'].str.pad(width=2, side='left', fillchar='0'), df_debate['merge_id_check']) #special characters need to be escaped '\\'
-
+    #split merge id into list, take all elements except last & then append padded speech number
 df_debate["merge_id_split"] = df_debate["merge_id"].str.split('.')
-df_debate["testing"] = df_debate["merge_id_split"].str[:-1] #copy out all elements of list except the last
+df_debate["merge_id_updated"] = df_debate["merge_id_split"].str[:-1] #copy out all elements of list except the last
+df_debate["merge_id_updated"] = df_debate["merge_id_updated"].str.join('.')
+df_debate["merge_id_updated"] = df_debate["merge_id_updated"]+"."+df_debate["merge_id_padded"]
 
-df_debate["testing"] = df_debate["testing"].str.join('.')
-df_debate["testing"] = df_debate["testing"]+"."+df_debate["merge_id_test"]
-
-df_debate["merge_id"] = df_debate["testing"].str.extract(r'(\d+\D\d+)')
+    #take update merge_id and extract just the digits (ignore any letters) so we can turn into a float
+df_debate["merge_id"] = df_debate["merge_id_updated"].str.extract(r'(\d+\D\d+)')
 df_debate["merge_id"] = df_debate["merge_id"].astype(float)
+
+    #drop temp vars used in adjusting merge_id to float for pd.merge_asof below
+df_debate = df_debate.drop(['merge_id_padded', 'merge_id_split', 'merge_id_updated'], axis=1)
 
 
 
@@ -136,7 +140,6 @@ df_complete = pd.merge_asof(df_full, df_debate, on = "merge_id")
 
 
 #NEXT: 
-    # tidy up col names in merge_id number section for debate
     # apply merge_id number approach to others (write as function and apply?)
     # need to extract date from filename and include this in df too  
     # check final output
