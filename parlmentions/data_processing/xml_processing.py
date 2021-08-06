@@ -85,19 +85,18 @@ for i in range(0,len(paragraph_id)):
    rows = [paragraph_id[i],paragraph_text[i]]
    data_paragraph.append(rows)
 
-##need to extract date from filename and include this in df too  
-   
 
 # Create dataframes 
-
 
 ## DEBATE
 
 df_debate = pd.DataFrame(data_debate, columns = ['debate_id','debate_text'])
 df_debate.sort_values('debate_id', inplace=True) #arrange major & minor headings in order in which they occurred
-#extract merge id as below for speech
+    #extract merge id as below for speech
 df_debate["merge_id"] = df_debate["debate_id"].str.split('\d*-\d*-\d*', n=1)
 df_debate["merge_id"] = df_debate["merge_id"].str[1]
+    #clean up debate title - remove leading/trailing whitespaces and/or tabs
+df_debate["debate_text"] = df_debate["debate_text"].str.strip()
 
 
 ## SPEECH
@@ -117,20 +116,20 @@ df_paragraph["merge_id"] = df_paragraph["merge_id"].str[0]
 
 
 
-#combine speech & paragraph dfs
+# Merge Dataframes - Speech & Paragraph
 df = df_speech.merge(df_paragraph, on = "merge_id")
 
-#concat speech paragraphs together (so we have 1 row per speech)
+    #concat speech paragraphs together (so we have 1 row per speech)
 df.fillna("",inplace=True) #fill None in strings with blank
 df_merged_speech = df.groupby('merge_id')['speech'].agg(lambda col: '\n\n'.join(col)) #join speech rows together with 2 newlines
 
-#join merged speech back into dataset
+    #join merged speech back into dataset
 df_temp = df.drop(columns=['paragraph_id', 'speech']) #remove paragraph_id & speech columns
 df_temp = df_temp.drop_duplicates(subset=["merge_id"]) #drop duplicates on remaining rows - so we have 1 row per speech
 df_full = df_temp.merge(df_merged_speech, on = "merge_id") #join in full speech 
 
 
-#bring speech & debate info together - match speech to nearest (previous) debate id
+# Merge Dataframes - Debate & Speech+Paragraph - match speech to nearest (previous) debate id
 
     #convert merge_id to float in both dataframes
 df_debate = adjust_merge_id_to_float(df_debate)
@@ -143,12 +142,13 @@ df_full.sort_values(by = "merge_id", inplace=True)
     #merge debate titles with speech dataframe
 df_complete = pd.merge_asof(df_full, df_debate, on = "merge_id")
 
+    #extract date from filename and include this in df
+
 
 #NEXT: 
-    # apply merge_id number approach to others (write as function and apply?)
     # need to extract date from filename and include this in df too  
     # check final output
-    # tidy up final output (drop unnecessary vars, sort out var order, remove tab/whitespace from start of debate_text)
+    # tidy up final output (drop unnecessary vars, sort out var order)
     # test run on a few more files & do some QA
     # modularise & set up process as outlined in comments below
 
