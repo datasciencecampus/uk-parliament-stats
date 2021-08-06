@@ -14,6 +14,28 @@ xmlfile = "D:/uk-parliament-stats/raw-data/uk-plt-xml/debates2015-12-17a.xml"
 #remember to only bring in *.xml (exclude 'empty.py' from folder)
 
 
+def adjust_merge_id_to_float (df):
+    #identify if speech number needs padding & pad where required
+    df["merge_id_padded"] = df['merge_id'].str[-2:]
+    df["merge_id_padded"] = df["merge_id_padded"].str.replace("\\.", "", regex = True) #special characters need to be escaped '\\'
+    df['merge_id_padded'] = np.where(df['merge_id_padded'].str.len() == 1, df['merge_id_padded'].str.pad(width=2, side='left', fillchar='0'), df['merge_id_padded']) 
+   
+    #split merge id into list, take all elements except last & then append padded speech number
+    df["merge_id_split"] = df["merge_id"].str.split('.')
+    df["merge_id_updated"] = df["merge_id_split"].str[:-1] #copy out all elements of list except the last
+    df["merge_id_updated"] = df["merge_id_updated"].str.join('.')
+    df["merge_id_updated"] = df["merge_id_updated"]+"."+df["merge_id_padded"]
+    
+    #take update merge_id and extract just the digits (ignore any letters) so we can turn into a float
+    df["merge_id"] = df["merge_id_updated"].str.extract(r'(\d+\D\d+)')
+    df["merge_id"] = df["merge_id"].astype(float)
+    
+    #drop temp vars used in adjusting merge_id to float for pd.merge_asof below
+    df = df.drop(['merge_id_padded', 'merge_id_split', 'merge_id_updated'], axis=1)
+    return df
+
+
+
 root_node = ET.parse(xmlfile).getroot()
 
 # extract debate info (id & title)     
@@ -77,26 +99,6 @@ df_debate.sort_values('debate_id', inplace=True) #arrange major & minor headings
 df_debate["merge_id"] = df_debate["debate_id"].str.split('\d*-\d*-\d*', n=1)
 df_debate["merge_id"] = df_debate["merge_id"].str[1]
 
-#sort out merge id numbers & convert to float
-    #identify if speech number needs padding & pad where required
-df_debate["merge_id_padded"] = df_debate['merge_id'].str[-2:]
-df_debate["merge_id_padded"] = df_debate["merge_id_padded"].str.replace("\\.", "", regex = True) #special characters need to be escaped '\\'
-df_debate['merge_id_padded'] = np.where(df_debate['merge_id_padded'].str.len() == 1, df_debate['merge_id_padded'].str.pad(width=2, side='left', fillchar='0'), df_debate['merge_id_padded']) 
-
-    #split merge id into list, take all elements except last & then append padded speech number
-df_debate["merge_id_split"] = df_debate["merge_id"].str.split('.')
-df_debate["merge_id_updated"] = df_debate["merge_id_split"].str[:-1] #copy out all elements of list except the last
-df_debate["merge_id_updated"] = df_debate["merge_id_updated"].str.join('.')
-df_debate["merge_id_updated"] = df_debate["merge_id_updated"]+"."+df_debate["merge_id_padded"]
-
-    #take update merge_id and extract just the digits (ignore any letters) so we can turn into a float
-df_debate["merge_id"] = df_debate["merge_id_updated"].str.extract(r'(\d+\D\d+)')
-df_debate["merge_id"] = df_debate["merge_id"].astype(float)
-
-    #drop temp vars used in adjusting merge_id to float for pd.merge_asof below
-df_debate = df_debate.drop(['merge_id_padded', 'merge_id_split', 'merge_id_updated'], axis=1)
-
-
 
 ## SPEECH
 
@@ -126,16 +128,19 @@ df_merged_speech = df.groupby('merge_id')['speech'].agg(lambda col: '\n\n'.join(
 df_temp = df.drop(columns=['paragraph_id', 'speech']) #remove paragraph_id & speech columns
 df_temp = df_temp.drop_duplicates(subset=["merge_id"]) #drop duplicates on remaining rows - so we have 1 row per speech
 df_full = df_temp.merge(df_merged_speech, on = "merge_id") #join in full speech 
-df_full["merge_id"] = df_full["merge_id"].str.extract(r'(\d+\D\d+)')
-df_full["merge_id"] = df_full["merge_id"].astype(float)
 
 
+#bring speech & debate info together - match speech to nearest (previous) debate id
 
+    #convert merge_id to float in both dataframes
+df_debate = adjust_merge_id_to_float(df_debate)
+df_full = adjust_merge_id_to_float(df_full)
 
-# sort both dataframes by merge_id to facilitate merge
+    #sort both dataframes by merge_id to facilitate merge
 df_debate.sort_values(by = "merge_id", inplace=True)
 df_full.sort_values(by = "merge_id", inplace=True)
-#merge debate titles with speech dataframe
+
+    #merge debate titles with speech dataframe
 df_complete = pd.merge_asof(df_full, df_debate, on = "merge_id")
 
 
