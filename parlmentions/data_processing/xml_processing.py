@@ -143,10 +143,9 @@ df_full.sort_values(by = "merge_id", inplace=True)
 df_complete = pd.merge_asof(df_full, df_debate, on = "merge_id")
 
     #extract date from filename and include this in df
-
+df_complete["date"] = df_complete["debate_id"].str.extract(r'(\d*-\d*-\d*)')
 
 #NEXT: 
-    # need to extract date from filename and include this in df too  
     # check final output
     # tidy up final output (drop unnecessary vars, sort out var order)
     # test run on a few more files & do some QA
