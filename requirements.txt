@@ -6,6 +6,7 @@ os
 
 #data prep
 pandas
+numpy
 
 #nlp
 spacy
