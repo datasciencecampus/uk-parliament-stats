@@ -145,16 +145,26 @@ df_complete = pd.merge_asof(df_full, df_debate, on = "merge_id")
     #extract date from filename and include this in df
 df_complete["date"] = df_complete["debate_id"].str.extract(r'(\d*-\d*-\d*)')
 
+
+# Prepare DF column names - drop/rename to get: [date, agenda, speech_id, speaker, text, parliament]
+    #drop unnecessary columns
+df_complete = df_complete.drop(['speech_id', 'debate_id'], axis=1)
+    #rename columns
+df_complete.rename(columns={"speaker_name": "speaker", "merge_id": "speech_id", "speech": "text", "debate_text": "agenda"}, inplace=True)
+    #create 'parliament'
+df_complete["parliament"] = "default-HoC"
+    #re-order columns
+column_names = ["date", "agenda", "speech_id", "speaker", "text", "parliament"]
+df_complete = df_complete.reindex(columns=column_names)
+
+
+
 #NEXT: 
     # check final output
-    # tidy up final output (drop unnecessary vars, sort out var order)
     # test run on a few more files & do some QA
     # modularise & set up process as outlined in comments below
 
     
-
-
-
 
 
 # read in XML
