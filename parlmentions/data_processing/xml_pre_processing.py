@@ -7,23 +7,12 @@ Created on Mon Aug  9 13:30:13 2021
 
 import re
 
-txtfile = "//NDATA9/corber$/Desktop/debates2015-12-17a.txt"
-xmloutput = "//NDATA9/corber$/Desktop/debates2015-12-17a.xml"
+xmlinput = "D:/uk-parliament-stats/raw-data/uk-plt-xml/debates2015-12-17a.xml"
+outputlocation = "D:/uk-parliament-stats/raw-data/uk-plt-xml/processed/"
 
 
-
-#open xml & save as .txt
-
-#input -> provided
-#get filename from input path (i.e. strip file type and location)
-#output = outputlocation + filename + xml
-
-
-
-
-
-#open .txt
-with open(txtfile) as f:
+#open xml
+with open(xmlinput) as f:
     lines = f.readlines()
 
 #find/replace
@@ -33,11 +22,19 @@ for line in lines:
     line_updated = re.sub(r'</phrase>', '', line_updated) #delete phrase closing tag
     updated_list.append(line_updated)
     
-#join list into one str
+#join list together into one str
 textoutput = "".join(updated_list)
 
-# save as .xml
-output = open(xmloutput, "w")
-output.write(textoutput) #output has Windows CR LF not Unix LF, is this a problem?
+
+#create output path
+filename = re.sub(r'.*?xml/','',xmlinput) #delete path
+xmloutput = outputlocation+filename
+
+
+#save out to new location
+with open(xmloutput, "w") as o:
+    o.write(textoutput) #output has Windows CR LF not Unix LF, is this a problem?
+
+
 
 
