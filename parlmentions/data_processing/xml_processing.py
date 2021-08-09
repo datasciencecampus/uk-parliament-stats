@@ -11,7 +11,7 @@ import xml.etree.ElementTree as ET
 
 
 xmlfile = "D:/uk-parliament-stats/raw-data/uk-plt-xml/processed/debates2015-12-17a.xml"
-output = "D:/uk-parliament-stats/outputs/data/xmloutput.csv"
+output = "D:/uk-parliament-stats/raw-data/xmloutput.csv"
 #remember to only bring in *.xml (exclude 'empty.py' from folder)
 
 
@@ -165,10 +165,9 @@ df_complete.to_csv(output, index = False)
 
 
 #NEXT: 
-    # check final output
-        # issue with XML having references to another MP in the speech - this stops ingest of speech text when it appears (see: a.1807.0/8 or a.1809.0/2)
-    # test run on a few more files & do some QA
     # modularise & set up process as outlined in comments below
+    # test run on a ~5 files & do some QA
+
 
     
 

@@ -12,7 +12,7 @@ outputlocation = "D:/uk-parliament-stats/raw-data/uk-plt-xml/processed/"
 
 
 #open xml
-with open(xmlinput) as f:
+with open(xmlinput, "r") as f:
     lines = f.readlines()
 
 #find/replace
@@ -33,7 +33,7 @@ xmloutput = outputlocation+filename
 
 #save out to new location
 with open(xmloutput, "w") as o:
-    o.write(textoutput) #output has Windows CR LF not Unix LF, is this a problem?
+    o.write(textoutput) #output has Windows CR LF not Unix LF, is this a problem? -> might be causing issue with mdash not being inserted?
 
 
 
