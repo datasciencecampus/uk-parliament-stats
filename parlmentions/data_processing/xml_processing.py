@@ -10,7 +10,7 @@ import numpy as np
 import xml.etree.ElementTree as ET
 
 
-xmlfile = "D:/uk-parliament-stats/raw-data/uk-plt-xml/debates2015-12-17a.xml"
+xmlfile = "D:/uk-parliament-stats/raw-data/uk-plt-xml/processed/debates2015-12-17a.xml"
 output = "D:/uk-parliament-stats/outputs/data/xmloutput.csv"
 #remember to only bring in *.xml (exclude 'empty.py' from folder)
 
