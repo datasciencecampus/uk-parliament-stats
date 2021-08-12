@@ -3,33 +3,52 @@ Identifying frequency and sentiment of mentions of UKSA/ONS and our statistics i
 
 ## Project Structure
 
-### /data 
+### config.py
 
-Various data files used in the project
+Configuration file for pipeline.
+
+### /raw-data 
+
+Where the download files are saved.
+
+### /outputs
+
+Where the output files are saved.
 
 ### /user-engagement
 
 Files used in user/stakeholder engagement.
 
-### parliament-frequency-analysis.py
+### /functions
 
-Python script that does some basic frequency calculations of mentions of UKSA/ONS in our dataset.
+Functions to download, parse and analyse the data.
 
-### parliament-xml-download.py
+### /functions/pipeline.py
 
-Python script for downloading XML files of Hansard from https://www.theyworkforyou.com/pwdata/scrapedxml/
+Pipeline file used to call other functions
 
-### rds-preparation.R
+#### /functions/data_download/parliament_xml_download.py
 
-R script for some quick data prep on the data source used for project prototype. Output from this still needs some manual amending to fix encoding to utf-8 (see 'Workflow' section below).
+Python script for downloading XML files of Hansard from https://www.theyworkforyou.com/pwdata/scrapedxml/. 
+
+#### /functions/data_processing/parliament_xml_processing.py
+
+Python script for processing the downloaded XML files. 
+
+#### /functions/data_processing/parliament_rds_processing.py
+
+Python script for processing the downloaded RDS file. 
 
 ## Workflow
 
-- Get 2015-2019 Commons Debates file from: https://dataverse.harvard.edu/file.xhtml?persistentId=doi:10.7910/DVN/L4OAKN/W2SVMF&version=1.0
-- Run this through rds-preparation.R
-- Open CSV output produced by rds-preparation.R in Notepad, save as, switch encoding to 'UTF-8', save in desired location [this step is required because original encoding isn't support by python]
-- Use parliament-frequency-analysis.py to read in the UTF-8 version of the csv & perform analysis 
+The process has been modulised so that the user can either download the historic RDS file or download data in XML format for specific dates. The user can then process this data, save the processed data as a CSV and then analyse.
 
-Future plans: parliament-xml-download.py will be used to provide full data from 2015-2021 (& onwards if prototype moves into production)
-
+- Data download:
+    - To get historic 2015-2019 Commons Debates file from: https://dataverse.harvard.edu/file.xhtml?persistentId=doi:10.7910/DVN/L4OAKN/W2SVMF&version=1.0 and choose `data_type = 'RDS'` in config.py 
+    - Or to download XML data choose `data_type = 'XML'` and specific the other parameters `date_start`, `date_end`, `sections`
+- Data processing:
+    - To create the CSV file from the data by `choose process_data = True` in config.py
+    - To load a saved CSV file specify the filename in `csv_filename` in config.py
+- The created or pre-saved CSV file is then loaded
+- The data is then analysed 
 
