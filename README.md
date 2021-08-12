@@ -31,19 +31,21 @@ Pipeline file used to call other functions
 
 Python script for downloading XML files of Hansard from https://www.theyworkforyou.com/pwdata/scrapedxml/. 
 
+#### /functions/data_download/parliament_rds_download.py
+
+Python script for downloading RDS file as a CSV.
+
 #### /functions/data_processing/parliament_xml_processing.py
 
 Python script for processing the downloaded XML files. 
 
-#### /functions/data_processing/parliament_rds_processing.py
-
-Python script for processing the downloaded RDS file. 
 
 ## Workflow
 
-The process has been modulised so that the user can either download the historic RDS file or download data in XML format for specific dates. The user can then process this data, save the processed data as a CSV and then analyse.
+The process has been modularised so that the user can either download the historic RDS file or download data in XML format for specific dates. The user can then process this data, save the processed data as a CSV and then analyse.
 
 - Data download:
+    - Choose `download_data = True` in config.py
     - To get historic 2015-2019 Commons Debates file from: https://dataverse.harvard.edu/file.xhtml?persistentId=doi:10.7910/DVN/L4OAKN/W2SVMF&version=1.0 and choose `data_type = 'RDS'` in config.py 
     - Or to download XML data choose `data_type = 'XML'` and specific the other parameters `date_start`, `date_end`, `sections`
 - Data processing:
