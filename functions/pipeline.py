@@ -16,4 +16,5 @@ def pipeline(config):
         print('----------------Processing xml files--------------')
         process_xml_files()
 
+
 pipeline(config)

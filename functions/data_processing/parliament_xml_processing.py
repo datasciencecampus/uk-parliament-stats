@@ -8,13 +8,15 @@ from lxml import etree
 
 import config
 
-localpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'raw-data', 'uk-plt-xml'))
-savepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'outputs', 'data'))
+localpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'raw-data', 'xml'))
+savepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'raw-data', 'xml'))
 
 verbose = config.verbose
 
 def save_to_csv(df):
-    df.to_csv(os.path.join(savepath,f'xml_processed_id{datetime.now().timestamp()}.csv'))
+    filename = os.path.join(savepath,f'xml_processed_id{datetime.now().timestamp()}.csv')
+    df.to_csv(filename)
+    return filename
 
 def xml_file_list():
     matches = []
@@ -171,7 +173,8 @@ def create_dataframe():
 def process_xml_files():
     df = create_dataframe()
     df = df.reset_index()
-    save_to_csv(df)
+    filename = save_to_csv(df)
+    return filename
 # read in XML
 
 # format DF into what I need (col names) - formatting may vary based on lords/answers/commons etc.!!

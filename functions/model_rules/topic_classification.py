@@ -25,7 +25,7 @@ Inequalities/Wellbeing
 
 import pandas as pd
 import spacy
-from parlmentions.model_rules import patterns
+from functions.model_rules import patterns
 from spacy.matcher import Matcher
 
 
@@ -58,7 +58,8 @@ def get_matches(text):
 # classifying debates in a dataframe by topic 
 def classify_debates(df):
     #use matcher on dataframe supplied
-    df_uniquedebates = df.drop_duplicates(subset=['agenda']) #create df with only unique debate titles - speeds up processing
+    df['agenda'] = df['agenda'].astype(str) #nan errors, convert to string
+    df_uniquedebates = df.drop_duplicates(subset=['agenda']).copy() #create df with only unique debate titles - speeds up processing
     df_uniquedebates['topic'] = df_uniquedebates['agenda'].apply(lambda x : get_matches(x)) #identify matches row by row
     df_uniquedebates['topic'] = df_uniquedebates['topic'].str.replace('EXCEPTIONS', 'OTHER', case=True, regex=None) #recode exceptions into 'other' category
     output_df = df.merge(df_uniquedebates, on='agenda', suffixes=(None, "_dropme")) #join topics from unique debates onto full dataset, duplicate fields get '_dropme' suffix

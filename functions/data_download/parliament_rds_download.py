@@ -2,12 +2,18 @@ import sys
 import requests
 import os
 
+import config
 
-savepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'outputs', 'data'))
+savepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'raw-data', 'rds'))
 url = 'https://storage.googleapis.com/harvard-dataverse/Corp_HouseOfCommons_V2.csv'
 
 def download_rds_file():
-    path = os.path.join(os.path.join(savepath,f'Corp_HouseOfCommons_V2.csv'))
+    if config.file_size == 'All':
+        url = 'https://storage.googleapis.com/harvard-dataverse/Corp_HouseOfCommons_V2.csv'
+        path = os.path.join(os.path.join(savepath,f'Corp_HouseOfCommons_V2.csv'))
+    else:
+        url = f'https://storage.googleapis.com/harvard-dataverse/Corp_HouseOfCommons_V2_{config.file_size}rnd.csv'
+        path = os.path.join(os.path.join(savepath,f'Corp_HouseOfCommons_V2_{config.file_size}rnd.csv'))
 
     check_file = os.path.isfile(path)
     if not check_file:
@@ -28,4 +34,5 @@ def download_rds_file():
                     sys.stdout.write("\r[%s%s]" % ('=' * done, ' ' * (50 - done)))
                     sys.stdout.flush()
     else:
-        print(f'File exists already as {path}.')
+        print(f'File exists already at {path}. Using that file instead.')
+    return path

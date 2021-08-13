@@ -27,7 +27,7 @@ def create_date_variables (df):
     df['weekstart'] = df['date'].dt.to_period('W').apply(lambda r: r.start_time) #find date for Monday for each week
     #extract year, weeknumber and date of start of the week from the date field
     df["year"] = df["date"].dt.year
-    df["weeknum"] = df["date"].dt.week
+    df["weeknum"] = df["date"].dt.isocalendar().week
     #force two figures in weeknum, e.g. '5' -> '05', so that ordering can be done using week var created below
     df["weeknum"] = df["weeknum"].apply(lambda x: '{0:0>2}'.format(x))
     #create year specific week variable (e.g. 2015-03)

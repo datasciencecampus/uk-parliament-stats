@@ -8,7 +8,7 @@ import re
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-from functions.network.ons_network import set_ons_proxies
+from functions.other.ons_network import set_ons_proxies
 import config
 
 localpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'raw-data', 'uk-plt-xml'))
