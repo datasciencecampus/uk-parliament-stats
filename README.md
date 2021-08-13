@@ -20,7 +20,9 @@ To clone the repo, use:
 
 See `requirements.txt` for the required packages.
 
-To run the code run `parlmentions.py`.
+To run the code run `parlmentions.py`. Requires spaCy `en_core_web_md`:
+
+` python -m spacy download en_core_web_md`
 
 ## Project Structure
 
