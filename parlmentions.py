@@ -1,7 +1,7 @@
 import pandas as pd
 import os
 
-from functions.data_processing.df_prep import find_ons_mentions
+from functions.data_processing.df_prep import find_org_mentions
 from functions.data_processing.df_prep import create_date_variables
 from functions.data_processing.df_prep import create_hansard_url
 from functions.data_processing.df_prep import extract_context
@@ -42,7 +42,7 @@ def parlmentions():
     df = pd.read_csv(filename)
 
     print("Identifying mentions of specified organisations (3/8).")
-    df = find_ons_mentions(df, config.organisations)
+    df = find_org_mentions(df, config.organisations)
 
     # create variables: dates & week numbering, hansard URLs
     print("Creating variables (4/8)")

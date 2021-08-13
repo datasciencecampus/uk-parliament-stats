@@ -1,15 +1,40 @@
-# uk-parliament-stats
-Identifying frequency and sentiment of mentions of UKSA/ONS and our statistics in the UK Parliament (2015-2021)
+# parlmentions
+Identifying frequency and sentiment of mentions of an organisation and classifying debates from UK Parliament transcripts (Hansard)
+
+## Workflow
+
+The process has been modularised so that the user can either use historic data or download the latest data for specific dates. For more detailed information about the process and variables see `config.py`. In essence, it is split into three parts:
+
+1. Data download and cleaning:
+    - Data is either downloaded from a pre-made CSV file or a CSV file is created from online XML files from (https://www.theyworkforyou.com/pwdata/scrapedxml). If data is already downloaded, you can load in the CSV file instead.
+2. Finding mentions of Organisations in text:
+    - Any organisations listed in `config.py` will be searched for in the CSV file. In the output file the name of the organisation will be listed as well as contextual text either side where it is mentioned.
+3. Classifying debates:
+    - Each debate will then be classified using a `spaCy` model based on the configuration in `functions/model_rules/patterns.py`. This project has been tuned to work for Office for National Statistics purposes currently.
+
+## Using
+
+To clone the repo, use:
+
+`git clone https://github.com/rozzahh/uk-parliament-stats.git`
+
+See `requirements.txt` for the required packages.
+
+To run the code run `parlmentions.py`.
 
 ## Project Structure
 
+### parlmentions.py
+
+The main python file to call.
+
 ### config.py
 
-Configuration file for pipeline.
+The main configuration file for the parlmentions.py pipeline.
 
 ### /raw-data 
 
-Where the download files are saved.
+Where the downloaded XML or RDS files are saved.
 
 ### /outputs
 
@@ -23,34 +48,42 @@ Files used in user/stakeholder engagement.
 
 Functions to download, parse and analyse the data.
 
-### /functions/pipeline.py
+##### /functions/data_download/parliament_xml_download.py
 
-Pipeline file used to call other functions
-
-#### /functions/data_download/parliament_xml_download.py
-
-Python script for downloading XML files of Hansard from https://www.theyworkforyou.com/pwdata/scrapedxml/. 
+Python script for downloading XML files of Hansard from https://www.theyworkforyou.com/pwdata/scrapedxml/ using variables from `config.py`. 
 
 #### /functions/data_download/parliament_rds_download.py
 
-Python script for downloading RDS file as a CSV.
+Python script for downloading the Harvard RDS file as a CSV. Use `config.py` to specify if you want to download the entire dataset (2.2 GB) or random cuts.
 
 #### /functions/data_processing/parliament_xml_processing.py
 
-Python script for processing the downloaded XML files. 
+Python script for processing the downloaded XML files and saving to a CSV file. 
 
+#### /functions/data_processing/df_prep.py
 
-## Workflow
+Python script for preparing the saved CSV file for analysis.
 
-The process has been modularised so that the user can either download the historic RDS file or download data in XML format for specific dates. The user can then process this data, save the processed data as a CSV and then analyse.
+#### /functions/model_rules/patterns.py
 
-- Data download:
-    - Choose `download_data = True` in config.py
-    - To get historic 2015-2019 Commons Debates file from: https://dataverse.harvard.edu/file.xhtml?persistentId=doi:10.7910/DVN/L4OAKN/W2SVMF&version=1.0 and choose `data_type = 'RDS'` in config.py 
-    - Or to download XML data choose `data_type = 'XML'` and specific the other parameters `date_start`, `date_end`, `sections`
-- Data processing:
-    - To create the CSV file from the data by `choose process_data = True` in config.py
-    - To load a saved CSV file specify the filename in `csv_filename` in config.py
-- The created or pre-saved CSV file is then loaded
-- The data is then analysed 
+A configuration file holding labelled classification rules.
 
+#### /functions/model_rules/topic_classification.py
+
+Python script that runs a spaCy model to classify topics.
+
+#### /functions/other/config_checker.py
+
+Python script that makes sure the config file is ok.
+
+#### /functions/other/ons_network.py
+
+Python script that calls proxies from the ONS network.
+
+^ To be removed if made public.
+
+## Acknowledgements
+
+Data used to build and test this project comes from Harvard Dataverse (https://dataverse.harvard.edu/file.xhtml?persistentId=doi:10.7910/DVN/L4OAKN/W2SVMF&version=1.0). Due to the reliance of `R` for RDS files, we have converted this file to a CSV file ourselves and hosted on a server.
+
+```Rauh, Christian; Schwalbach, Jan, 2020, "Corp_HouseOfCommons_V2.rds", The ParlSpeech V2 data set: Full-text corpora of 6.3 million parliamentary speeches in the key legislative chambers of nine representative democracies, https://doi.org/10.7910/DVN/L4OAKN/W2SVMF, Harvard Dataverse, V1```
