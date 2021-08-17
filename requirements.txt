@@ -2,11 +2,12 @@
 requests
 time
 os
-
+beautifulsoup4
 
 #data prep
 pandas
 numpy
+
 #nlp
 spacy
 string
