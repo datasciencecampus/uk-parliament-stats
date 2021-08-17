@@ -14,9 +14,9 @@ def config_checker():
                            'ni','regmem','sp-motions','sp-new','sp-questions','sp-written','sp','standing','westminhall']:
             raise ValueError(f"Error: section {section} in config.py is not valid.")
     if  re.search(r'\d{2}/\d{2}/\d{4}', config.date_start) is None:
-        raise ValueError("Error: date_start in config.py should be in dd-mm-yyyy format")
+        raise ValueError("Error: date_start in config.py should be in dd/mm/yyyy format")
     if  re.search(r'\d{2}/\d{2}/\d{4}', config.date_end) is None:
-        raise ValueError("Error: date_end in config.py should be in dd-mm-yyyy format")
+        raise ValueError("Error: date_end in config.py should be in dd/mm/yyyy format")
     if config.use_proxies not in [True,False]:
         raise ValueError("Error: use_proxies in config.py should either be True or False")
     if config.verbose not in [True,False]:
