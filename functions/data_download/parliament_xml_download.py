@@ -58,7 +58,11 @@ def download(download_urls):
                     print("<<< No proxies worked - waiting 60 seconds then re-trying >>>")
                     time.sleep(60)
             else:
-                xml_file = requests.get(download_url, verify=False)
+                try:
+                    xml_file = requests.get(download_url, verify=False)
+                except ProxyError:
+                    print("<<< proxy error - waiting 60 seconds then re-trying >>>")
+                    time.sleep(60)
             open(filename, 'wb').write(xml_file.content)
             if verbose == True:
                 print(f"downloaded file from: {download_url} \n to: {filename} ({count}/{total_files})")

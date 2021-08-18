@@ -79,5 +79,5 @@ def extract_context (df):
 #Drop unnecessary columns
 
 def remove_columns (df):
-    df = df.drop(['party.facts.id', 'iso3country', 'year', 'weeknum', 'org_name_location', 'context-start', 'context-stop'], axis=1)
+    # df = df.drop(['party.facts.id', 'iso3country', 'year', 'weeknum', 'org_name_location', 'context-start', 'context-stop'], axis=1)
     return df

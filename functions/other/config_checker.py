@@ -21,3 +21,5 @@ def config_checker():
         raise ValueError("Error: use_proxies in config.py should either be True or False")
     if config.verbose not in [True,False]:
         raise ValueError("Error: verbose in config.py should either be True or False")
+    if config.search_what not in ['Both','Text','Agenda']:
+        raise ValueError("Error: search_what in config.py should either be Both, Text or Agenda")

@@ -62,18 +62,18 @@ def parse_file(xmlfile):
     debate_text = []
     for tag in root_node.findall('major-heading'):
         debate_id_temp = tag.get('id')
-        debate_text_temp = tag.text
+        debate_text_temp = tag.text.replace('\n','')
         debate_id.append(debate_id_temp)
         debate_text.append(debate_text_temp)
     for tag in root_node.findall('minor-heading'):
         debate_id_temp = tag.get('id')
-        debate_text_temp = tag.text
+        debate_text_temp = tag.text.replace('\n','')
         debate_id.append(debate_id_temp)
         debate_text.append(debate_text_temp)
 
     data_debate = []
     for i in range(0,len(debate_id)):
-       rows = [debate_id[i],debate_text[i]]
+       rows = [debate_id[i],str(debate_text[i])]
        data_debate.append(rows)
 
     # extract speakername & speech id
@@ -105,11 +105,11 @@ def parse_file(xmlfile):
 
     data_paragraph = []
     for i in range(0,len(paragraph_id)):
-       rows = [paragraph_id[i],paragraph_text[i]]
+       rows = [paragraph_id[i],str(paragraph_text[i])]
        data_paragraph.append(rows)
 
     ## create dataframes
-    df_debate = pd.DataFrame(data_debate, columns = ['debate_id','debate_text'])
+    df_debate = pd.DataFrame(data_debate, columns = ['debate_id','agenda'])
     df_debate.sort_values('debate_id', inplace=True) #arrange major & minor headings in order in which they occurred
     df_debate["merge_id"] = df_debate["debate_id"].str.split('\d*-\d*-\d*', n=1)  #extract merge id as below for speech
     df_debate["merge_id"] = df_debate["merge_id"].str[1]
@@ -126,23 +126,23 @@ def parse_file(xmlfile):
     df_debate["merge_id"] = df_debate["merge_id"].astype(float)
 
 
-    df_speech = pd.DataFrame(data_speech, columns = ['speech_id','speaker_name'], dtype='string')
+    df_speech = pd.DataFrame(data_speech, columns = ['speech_id','speaker'], dtype='string')
     df_speech["merge_id"] = df_speech["speech_id"].str.split('\d*-\d*-\d*', n=1)
     df_speech["merge_id"] = df_speech["merge_id"].str[1]
     df_speech["merge_id"] = df_speech["merge_id"].astype('string')
     df_speech['merge_id'] = df_speech.merge_id.str[0:1] + df_speech.merge_id.str[2:] #remove first fullstop
 
-    df_paragraph = pd.DataFrame(data_paragraph, columns = ['paragraph_id','speech'], dtype='string')
+    df_paragraph = pd.DataFrame(data_paragraph, columns = ['paragraph_id','text'], dtype='string')
     df_paragraph["merge_id"] = df_paragraph["paragraph_id"].str.split('/', n=1)
     df_paragraph["merge_id"] = df_paragraph["merge_id"].str[0].astype('string')
 
     df = df_speech.merge(df_paragraph, on = "merge_id") #combine speech & paragraph dfs
     df.fillna("",inplace=True) #fill None in strings with blank
 
-    df_merged_speech = df.groupby('merge_id')['speech'].agg(lambda col: '\n\n'.join(col)) #join speech rows together with 2 newlines
+    df_merged_speech = df.groupby('merge_id')['text'].agg(lambda col: '\n\n'.join(col)) #join speech rows together with 2 newlines
 
     #join merged speech back into dataset
-    df_temp = df.drop(columns=['paragraph_id', 'speech']) #remove paragraph_id & speech columns
+    df_temp = df.drop(columns=['paragraph_id', 'text']) #remove paragraph_id & speech columns
     df_temp = df_temp.drop_duplicates(subset=["merge_id"]) #drop duplicates on remaining rows - so we have 1 row per speech
     df_full = df_temp.merge(df_merged_speech, on = "merge_id") #join in full speech
     df_full["merge_id"] = df_full["merge_id"].str.extract(r'(\d+\D\d+)')
@@ -154,11 +154,12 @@ def parse_file(xmlfile):
     df_complete = pd.merge_asof(df_full, df_debate, on = "merge_id") #merge debate titles with speech dataframe
     df_complete['date'] = date
     df_complete['section'] = os.path.basename(os.path.dirname(xmlfile))
+    df_complete['parliament'] = np.where(df_complete.section == 'debates', 'UK-HouseOfCommons', 'Other')
     return df_complete
 
 def create_dataframe():
-    df = pd.DataFrame(columns=['speech_id','speaker_name','merge_id','speech','debate_id','debate_text',
-                               'merge_id_check','merge_id_test','merge_id_split','testing','date','section'])
+    df = pd.DataFrame(columns=['speech_id','speaker','merge_id','text','debate_id','agenda',
+                               'merge_id_check','merge_id_test','merge_id_split','testing','date','section','parliament'])
     xml_files = xml_file_list()
     # xml_files = ['H:\\GitProjects\\uk-parliament-stats\\raw-data\\uk-plt-xml\\debates2021-01-06c.xml']
     count = 1
