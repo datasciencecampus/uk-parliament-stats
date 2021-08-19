@@ -2,7 +2,8 @@
 requests
 time
 os
-
+beautifulsoup4
+urllib3
 
 #data prep
 pandas
@@ -12,4 +13,3 @@ numpy
 spacy
 string
 sklearn
-
