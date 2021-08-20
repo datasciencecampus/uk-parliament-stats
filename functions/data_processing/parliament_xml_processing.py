@@ -130,7 +130,7 @@ def parse_file(xmlfile):
     df_speech["merge_id"] = df_speech["speech_id"].str.split('\d*-\d*-\d*', n=1)
     df_speech["merge_id"] = df_speech["merge_id"].str[1]
     df_speech["merge_id"] = df_speech["merge_id"].astype('string')
-    df_speech['merge_id'] = df_speech.merge_id.str[0:1] + df_speech.merge_id.str[2:] #remove first fullstop
+    # df_speech['merge_id'] = df_speech.merge_id.str[0:1] + df_speech.merge_id.str[2:] #remove first fullstop
 
     df_paragraph = pd.DataFrame(data_paragraph, columns = ['paragraph_id','text'], dtype='string')
     df_paragraph["merge_id"] = df_paragraph["paragraph_id"].str.split('/', n=1)
