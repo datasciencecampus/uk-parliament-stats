@@ -11,7 +11,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 from functions.other.ons_network import set_ons_proxies
 import config
 
-localpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'raw-data', 'uk-plt-xml'))
+localpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'raw-data', 'xml'))
 verbose = config.verbose
 
 def check_if_folders_exist(config):
@@ -26,6 +26,7 @@ def get_download_links(config):
     section_list = []
     for section in config.sections:
         section_url = 'https://www.theyworkforyou.com/pwdata/scrapedxml/' + section
+        
         if config.use_proxies == True:
             try:
                 proxies = set_ons_proxies(ssl=True)
@@ -39,6 +40,7 @@ def get_download_links(config):
             except ProxyError:
                 print("<<< No proxies worked - waiting 60 seconds then re-trying >>>")
                 time.sleep(60)
+        
         data = page.text
         soup = BeautifulSoup(data, features="lxml")
         for link in soup.find_all('a'):
