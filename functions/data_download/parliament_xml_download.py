@@ -47,7 +47,7 @@ def get_download_links(config):
             match = re.search(r'\d{4}-\d{2}-\d{2}', link.text)
             if match is not None:
                 date = datetime.strptime(match.group(), '%Y-%m-%d')
-                if datetime.strptime(config.date_start, '%d/%m/%Y') < date <= datetime.strptime(config.date_end,
+                if datetime.strptime(config.date_start, '%d/%m/%Y') <= date <= datetime.strptime(config.date_end,
                                                                                                 '%d/%m/%Y'):
                     download_urls.append(
                         'https://www.theyworkforyou.com/pwdata/scrapedxml/' + section + '/' + link.text)
