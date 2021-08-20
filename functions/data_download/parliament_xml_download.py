@@ -26,7 +26,19 @@ def get_download_links(config):
     section_list = []
     for section in config.sections:
         section_url = 'https://www.theyworkforyou.com/pwdata/scrapedxml/' + section
-        page = requests.get(section_url, verify=False)
+        if config.use_proxies == True:
+            try:
+                proxies = set_ons_proxies(ssl=True)
+                page = requests.get(section_url, proxies=proxies, verify=False)
+            except ProxyError:
+                print("<<< No proxies worked - waiting 60 seconds then re-trying >>>")
+                time.sleep(60)
+        else:
+            try:
+                page = requests.get(section_url, verify=False)
+            except ProxyError:
+                print("<<< No proxies worked - waiting 60 seconds then re-trying >>>")
+                time.sleep(60)
         data = page.text
         soup = BeautifulSoup(data, features="lxml")
         for link in soup.find_all('a'):
