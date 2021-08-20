@@ -30,7 +30,7 @@ def xml_file_list():
                             match = re.search(r'\d{4}-\d{2}-\d{2}', filename)
                             if match is not None:
                                 date = datetime.strptime(match.group(), '%Y-%m-%d')
-                                if datetime.strptime(config.date_start, '%d/%m/%Y') < date <= datetime.strptime(config.date_end,
+                                if datetime.strptime(config.date_start, '%d/%m/%Y') <= date <= datetime.strptime(config.date_end,
                                                                                                                 '%d/%m/%Y'):
                                     matches.append(os.path.join(root, filename))
     return matches
