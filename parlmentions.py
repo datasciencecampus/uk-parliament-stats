@@ -67,7 +67,7 @@ def parlmentions():
         print("Classifying debates from agenda [6/8]")
         df = classify_debates(df, column='agenda')
 
-#remove unnecessary columns before saving the output
+    #remove unnecessary columns before saving the output
     print("Cleaning output [7/8]")
     df = remove_columns(df)
 
