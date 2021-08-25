@@ -13,6 +13,37 @@ savepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '
 
 verbose = config.verbose
 
+
+def force_merge_id_structure(df):
+    # apply padding to insert 0s & convert to float
+    # then remove fullstops & trim any letters
+
+    #identify if speech number needs padding & pad where required
+    df["merge_id_padded"] = df['merge_id'].str[-2:]
+    df["merge_id_padded"] = df["merge_id_padded"].str.replace("\\.", "", regex = True) #special characters need to be escaped '\\'
+    df['merge_id_padded'] = np.where(df['merge_id_padded'].str.len() == 1, df['merge_id_padded'].str.pad(width=2, side='left', fillchar='0'), df['merge_id_padded']) 
+   
+    #split merge id into list, take all elements except last & then append padded speech number
+    df["merge_id_split"] = df["merge_id"].str.split('.')
+    df["merge_id_updated"] = df["merge_id_split"].str[:-1] #copy out all elements of list except the last
+    df["merge_id_updated"] = df["merge_id_updated"].str.join('.')
+    df["merge_id_updated"] = df["merge_id_updated"]+"."+df["merge_id_padded"]
+    
+    # then remove fullstops, trim any letters & convert to float
+
+    df["merge_id"] = df["merge_id_updated"].str.replace(".", "") #remove full stops
+    df["merge_id"] = df["merge_id"].str.slice(start=1) #strip away letter at start 
+    df["merge_id"] = df["merge_id"].astype(float)
+    
+    #drop temp vars used in adjusting merge_id to float for pd.merge_asof below
+    df = df.drop(['merge_id_padded', 'merge_id_split', 'merge_id_updated'], axis=1)
+    
+    return df    
+
+
+
+
+
 def save_to_csv(df):
     filename = os.path.join(savepath,f'xml_processed_id{datetime.now().timestamp()}.csv')
     df.to_csv(filename)
@@ -113,28 +144,20 @@ def parse_file(xmlfile):
     df_debate.sort_values('debate_id', inplace=True) #arrange major & minor headings in order in which they occurred
     df_debate["merge_id"] = df_debate["debate_id"].str.split('\d*-\d*-\d*', n=1)  #extract merge id as below for speech
     df_debate["merge_id"] = df_debate["merge_id"].str[1]
-    df_debate["merge_id_check"] = df_debate['merge_id'].str[-2:] #sort out merge id numbers & convert to float
-    df_debate["merge_id_check"] = df_debate["merge_id_check"].str.replace("\\.", "", regex = True)
-    df_debate['merge_id_test'] = np.where(df_debate['merge_id_check'].str.len() == 1,
-                                          df_debate['merge_id_check'].str.pad(width=2, side='left', fillchar='0'),
-                                          df_debate['merge_id_check']) #special characters need to be escaped '\\'
-    df_debate["merge_id_split"] = df_debate["merge_id"].str.split('.')
-    df_debate["testing"] = df_debate["merge_id_split"].str[:-1] #copy out all elements of list except the last
-    df_debate["testing"] = df_debate["testing"].str.join('.')
-    df_debate["testing"] = df_debate["testing"]+"."+df_debate["merge_id_test"]
-    df_debate["merge_id"] = df_debate["testing"].str.extract(r'(\d+\D\d+)')
-    df_debate["merge_id"] = df_debate["merge_id"].astype(float)
+    df_debate = force_merge_id_structure(df_debate)
 
 
     df_speech = pd.DataFrame(data_speech, columns = ['speech_id','speaker'], dtype='string')
     df_speech["merge_id"] = df_speech["speech_id"].str.split('\d*-\d*-\d*', n=1)
     df_speech["merge_id"] = df_speech["merge_id"].str[1]
-    df_speech["merge_id"] = df_speech["merge_id"].astype('string')
+    df_speech = force_merge_id_structure(df_speech)
+    # df_speech["merge_id"] = df_speech["merge_id"].astype('string')
     # df_speech['merge_id'] = df_speech.merge_id.str[0:1] + df_speech.merge_id.str[2:] #remove first fullstop
 
     df_paragraph = pd.DataFrame(data_paragraph, columns = ['paragraph_id','text'], dtype='string')
     df_paragraph["merge_id"] = df_paragraph["paragraph_id"].str.split('/', n=1)
     df_paragraph["merge_id"] = df_paragraph["merge_id"].str[0].astype('string')
+    df_paragraph = force_merge_id_structure(df_paragraph)
 
     df = df_speech.merge(df_paragraph, on = "merge_id") #combine speech & paragraph dfs
     df.fillna("",inplace=True) #fill None in strings with blank
@@ -145,8 +168,6 @@ def parse_file(xmlfile):
     df_temp = df.drop(columns=['paragraph_id', 'text']) #remove paragraph_id & speech columns
     df_temp = df_temp.drop_duplicates(subset=["merge_id"]) #drop duplicates on remaining rows - so we have 1 row per speech
     df_full = df_temp.merge(df_merged_speech, on = "merge_id") #join in full speech
-    df_full["merge_id"] = df_full["merge_id"].str.extract(r'(\d+\D\d+)')
-    df_full["merge_id"] = df_full["merge_id"].astype(float)
 
     # sort both dataframes by merge_id to facilitate merge
     df_debate.sort_values(by = "merge_id", inplace=True)
@@ -161,7 +182,7 @@ def create_dataframe():
     df = pd.DataFrame(columns=['speech_id','speaker','merge_id','text','debate_id','agenda',
                                'merge_id_check','merge_id_test','merge_id_split','testing','date','section','parliament'])
     xml_files = xml_file_list()
-    # xml_files = ['H:\\GitProjects\\uk-parliament-stats\\raw-data\\uk-plt-xml\\debates2021-01-06c.xml']
+    # xml_files = ['D:\\uk-parliament-stats\\raw-data\\xml\\debates\\debates2015-12-17a.xml']
     count = 1
     for xml_file in xml_files:
         if verbose == True:
@@ -176,23 +197,14 @@ def process_xml_files():
     df = df.reset_index()
     filename = save_to_csv(df)
     return filename
-# read in XML
 
-# format DF into what I need (col names) - formatting may vary based on lords/answers/commons etc.!!
 
-# run through prep + append functions to add to existing dataset (create df if non-existent)
+process_xml_files()
 
-# move xml to staging folder after processing complete
 
+# lordswms, lordswrans doesn't work as pargraph structure doesnt have merge id in p
 # clean-up function to delete xml files in staging folder - have this as separate manual step to avoid accidental deletion. Eventually could be built in to be run 1/month?
-#NEXT:
-    # tidy up col names in merge_id number section for debate
-    # apply merge_id number approach to others (write as function and apply?)
-    # need to extract date from filename and include this in df too
-    # check final output
-    # tidy up final output (drop unnecessary vars, sort out var order, remove tab/whitespace from start of debate_text)
-    # test run on a few more files & do some QA
-    # modularise & set up process as outlined in comments below
+# tidy up final output (drop unnecessary vars, sort out var order, remove tab/whitespace from start of debate_text)
 
 
-#lordswms, lordswrans doesn't work as pargraph structure doesnt have merge id in p
+

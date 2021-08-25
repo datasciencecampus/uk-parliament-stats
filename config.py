@@ -27,7 +27,10 @@ organisations = ["UKSA",
                  "UK Statistics Authority",
                  "OSR",
                  "Office for Statistics Regulation",
-                 "Office of Statistics Regulation"]
+                 "Office of Statistics Regulation",
+                 "ONS",
+                 "Office for National Statistics",
+                 "Office of National Statistics"]
 
 search_what = 'Agenda' # Search agenda or text or both. Options: Both, Text, Agenda.
 
