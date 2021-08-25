@@ -13,8 +13,8 @@ file_size = '1000' # Specify the size of the file. Options: 'All', '1000', '1000
 sections = ['debates'] # Specify
             # sections. Options: ['debates','divisionsonly','future', 'london-mayors-questions', 'lordsdivisionsonly',
             # 'lordspages', 'ni','regmem','sp-motions','sp-new','sp-questions','sp-written','sp','standing','westminhall'
-date_start = '01/01/2021' # specify start date of files
-date_end = '01/03/2021' # specify end date of files
+date_start = '06/01/2021' # specify start date of files
+date_end = '07/01/2021' # specify end date of files
 use_proxies = True # Use proxies or not. Options: True or False.
 
 ## ---- Load options ---- ##

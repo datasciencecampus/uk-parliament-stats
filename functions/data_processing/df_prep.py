@@ -23,7 +23,7 @@ def find_org_mentions (df, keywords):
 #Create date variables
 
 def create_date_variables (df):
-    df["date"] = pd.to_datetime(df["date"])     #convert date from object to datetime
+    df["date"] = pd.to_datetime(df["date"], dayfirst=True)     #convert date from object to datetime
     df['weekstart'] = df['date'].dt.to_period('W').apply(lambda r: r.start_time) #find date for Monday for each week
     #extract year, weeknumber and date of start of the week from the date field
     df["year"] = df["date"].dt.year
