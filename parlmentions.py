@@ -79,7 +79,7 @@ def parlmentions():
     #output to csv - drop index
     print("Saving data to CSV [8/8]")
     outputfile = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), 'outputs', 'data', f'uk_parl_stats_{os.path.basename(filename)}.csv'))
+        os.path.join(os.path.dirname(__file__), 'outputs', 'data', f'uk_parl_stats_{os.path.basename(filename)}'))
     df.to_csv(outputfile, index = False)
     print("Done!")
     return
