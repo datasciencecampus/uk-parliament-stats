@@ -69,8 +69,12 @@ def parlmentions():
 
     #remove unnecessary columns before saving the output
     print("Cleaning output [7/8]")
-    df = remove_columns(df)
-
+    if config.search_what == 'Both':
+        df = remove_columns(df, column = 'both')
+    elif config.search_what == 'Text':
+        df = remove_columns(df, column = 'text')        
+    elif config.search_what == 'Agenda':
+        df = remove_columns(df, column = 'agenda')
 
     #output to csv - drop index
     print("Saving data to CSV [8/8]")
