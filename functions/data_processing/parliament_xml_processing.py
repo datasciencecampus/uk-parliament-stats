@@ -31,7 +31,7 @@ def force_merge_id_structure(df):
     
     # then remove fullstops, trim any letters & convert to float
 
-    df["merge_id"] = df["merge_id_updated"].str.replace(".", "") #remove full stops
+    df["merge_id"] = df["merge_id_updated"].str.replace(".", "", regex = False) #remove full stops
     df["merge_id"] = df["merge_id"].str.slice(start=1) #strip away letter at start 
     df["merge_id"] = df["merge_id"].astype(float)
     
@@ -197,9 +197,6 @@ def process_xml_files():
     df = df.reset_index()
     filename = save_to_csv(df)
     return filename
-
-
-process_xml_files()
 
 
 # lordswms, lordswrans doesn't work as pargraph structure doesnt have merge id in p
