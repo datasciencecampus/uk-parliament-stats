@@ -45,7 +45,7 @@ def force_merge_id_structure(df):
 
 
 def save_to_csv(df):
-    filename = os.path.join(savepath,f'xml_processed_id{datetime.now().timestamp()}.csv')
+    filename = os.path.join(savepath,f'xml_processed_id{datetime.now().strftime("%Y%m%d-%H%M%S")}.csv')
     df.to_csv(filename)
     return filename
 
