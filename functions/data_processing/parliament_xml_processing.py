@@ -150,6 +150,7 @@ def parse_file(xmlfile):
     df_speech = pd.DataFrame(data_speech, columns = ['speech_id','speaker'], dtype='string')
     df_speech["merge_id"] = df_speech["speech_id"].str.split('\d*-\d*-\d*', n=1)
     df_speech["merge_id"] = df_speech["merge_id"].str[1]
+    df_debate["agenda"] = df_debate["agenda"].str.strip() #clean up debate title - remove leading/trailing whitespaces and/or tabs
     df_speech = force_merge_id_structure(df_speech)
     # df_speech["merge_id"] = df_speech["merge_id"].astype('string')
     # df_speech['merge_id'] = df_speech.merge_id.str[0:1] + df_speech.merge_id.str[2:] #remove first fullstop
