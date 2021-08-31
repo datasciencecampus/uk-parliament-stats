@@ -22,6 +22,13 @@ patterns_census = [
 [{'LEMMA': 'census'}]
     ]
 
+#COVID-19 - not in 2015-2019 dataset
+patterns_covid = [
+[{'LEMMA': 'covid'}],
+[{'LEMMA': 'coronavirus'}]
+    ]
+
+
 #Health
 patterns_health = [
 [{'LOWER': 'nhs'}], #NHS acronym
@@ -42,8 +49,6 @@ patterns_health = [
 [{'LEMMA': 'treatment'}],
 [{'LEMMA': 'treat'}],
     ]
-
-#COVID-19 - not in 2015-2019 dataset
 
 #Population and Migration
 patterns_popmigration = [
@@ -237,6 +242,7 @@ patterns_taxspend= [
 patterns_dict = {
  "EXCEPTIONS": patterns_exceptions,
  "CENSUS": patterns_census,
+ "COVID-19": patterns_covid,
  "HEALTH": patterns_health,
  "POPULATION_MIGRATION": patterns_popmigration,
  "ECONOMY": patterns_economy,
