@@ -28,7 +28,6 @@ patterns_covid = [
 [{'LEMMA': 'coronavirus'}]
     ]
 
-
 #Health
 patterns_health = [
 [{'LOWER': 'nhs'}], #NHS acronym
@@ -49,6 +48,9 @@ patterns_health = [
 [{'LEMMA': 'treatment'}],
 [{'LEMMA': 'treat'}],
     ]
+
+=======
+#COVID-19 - not in 2015-2019 dataset
 
 #Population and Migration
 patterns_popmigration = [

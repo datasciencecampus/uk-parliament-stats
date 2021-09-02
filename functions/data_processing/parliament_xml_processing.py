@@ -13,7 +13,6 @@ savepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '
 
 verbose = config.verbose
 
-
 def force_merge_id_structure(df):
     # apply padding to insert 0s & convert to float
     # then remove fullstops & trim any letters
@@ -160,6 +159,7 @@ def parse_file(xmlfile):
     df_paragraph["merge_id"] = df_paragraph["merge_id"].str[0].astype('string')
     df_paragraph = force_merge_id_structure(df_paragraph)
 
+
     df = df_speech.merge(df_paragraph, on = "merge_id") #combine speech & paragraph dfs
     df.fillna("",inplace=True) #fill None in strings with blank
 
@@ -169,6 +169,9 @@ def parse_file(xmlfile):
     df_temp = df.drop(columns=['paragraph_id', 'text']) #remove paragraph_id & speech columns
     df_temp = df_temp.drop_duplicates(subset=["merge_id"]) #drop duplicates on remaining rows - so we have 1 row per speech
     df_full = df_temp.merge(df_merged_speech, on = "merge_id") #join in full speech
+    df_full["merge_id"] = df_full["merge_id"].str.extract(r'(\d+\D\d+)')
+    df_full["merge_id"] = df_full["merge_id"].astype(float)
+
 
     # sort both dataframes by merge_id to facilitate merge
     df_debate.sort_values(by = "merge_id", inplace=True)
@@ -199,10 +202,6 @@ def process_xml_files():
     filename = save_to_csv(df)
     return filename
 
-
 # lordswms, lordswrans doesn't work as pargraph structure doesnt have merge id in p
 # clean-up function to delete xml files in staging folder - have this as separate manual step to avoid accidental deletion. Eventually could be built in to be run 1/month?
 # tidy up final output (drop unnecessary vars, sort out var order, remove tab/whitespace from start of debate_text)
-
-
-
