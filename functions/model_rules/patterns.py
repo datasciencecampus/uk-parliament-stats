@@ -25,6 +25,7 @@ patterns_census = [
 #COVID-19 - not in 2015-2019 dataset
 patterns_covid = [
 [{'LEMMA': 'covid'}],
+[{'LEMMA': 'covid-19'}],
 [{'LEMMA': 'coronavirus'}]
     ]
 
