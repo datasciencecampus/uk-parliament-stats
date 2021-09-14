@@ -169,8 +169,7 @@ def parse_file(xmlfile):
     df_temp = df.drop(columns=['paragraph_id', 'text']) #remove paragraph_id & speech columns
     df_temp = df_temp.drop_duplicates(subset=["merge_id"]) #drop duplicates on remaining rows - so we have 1 row per speech
     df_full = df_temp.merge(df_merged_speech, on = "merge_id") #join in full speech
-    df_full["merge_id"] = df_full["merge_id"].str.extract(r'(\d+\D\d+)')
-    df_full["merge_id"] = df_full["merge_id"].astype(float)
+
 
 
     # sort both dataframes by merge_id to facilitate merge

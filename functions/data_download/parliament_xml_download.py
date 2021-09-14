@@ -3,6 +3,7 @@ from requests.exceptions import ProxyError
 import time
 import os.path
 from datetime import datetime
+from datetime import timedelta
 from bs4 import BeautifulSoup
 import re
 import urllib3
@@ -10,6 +11,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 from functions.other.ons_network import set_ons_proxies
 import config
+import pandas as pd
 
 localpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'raw-data', 'xml'))
 verbose = config.verbose
@@ -90,3 +92,25 @@ def download_xml_files():
     check_if_folders_exist(config)
     download_urls, section_list = get_download_links(config)
     download(download_urls)
+
+
+
+
+def update_dates():
+   
+# - open csv specified in config
+    archive = pd.read_csv(config.archive_location)
+
+# - make backup copy with datetime stamp to folder
+    if config.archive_backup == True:
+        archive.to_csv("D:/uk-parliament-stats/outputs/data/uk_parl_stats-backup.csv", index = False) # need to split up file path into parts, add date/timestamp + join back up
+    else:
+        pass
+
+    # - find max date in csv & save this as variable
+    latest_date = datetime.strptime(archive["date"].max(), '%Y-%m-%d') + timedelta(days=1)
+    # - overwrite config.date_start with max value + 1 day
+    updated_date_start = latest_date.strftime('%d/%m/%Y') #convert back to string & match format used in config file
+    # update config.date_end with current date
+    updated_date_end = datetime.today().strftime('%d/%m/%Y')
+    return (updated_date_start, updated_date_end)

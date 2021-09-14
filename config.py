@@ -10,6 +10,9 @@ download_data = True # Download data or not. Options: True or False
 file_size = '1000' # Specify the size of the file. Options: 'All', '1000', '10000', or '100000'
 
 #### For XML ####
+archive_update = True #Specify if you wish to use an archive file of already processed XML and only process new data up today's date. Useful for regular updating. Options: True or False
+archive_backup = True # Specify whether you wish to make a backup of the archive before appending new data - will create a date+timestamped file in the same folder as the archive. Options: True or False
+
 sections = ['debates'] # Specify
             # sections. Options: ['debates','divisionsonly','future', 'london-mayors-questions', 'lordsdivisionsonly',
             # 'lordspages', 'ni','regmem','sp-motions','sp-new','sp-questions','sp-written','sp','standing','westminhall'
@@ -20,6 +23,7 @@ use_proxies = True # Use proxies or not. Options: True or False.
 
 ## ---- Load options ---- ##
 
+archive_location = "outputs/data/uk_parl_stats.csv" # Provide the path to the archive file.
 csv_filename = 'Corp_HouseOfCommons_V2_1000rnd.csv' # If using downloaded file, specify it's name
 
 ## ---- Search options ---- ##

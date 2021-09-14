@@ -7,6 +7,7 @@ Created on Tue May 25 15:21:42 2021
 
 # --- Libraries ---
 import pandas as pd
+import config
 
 # --- Function ---
 
@@ -82,4 +83,11 @@ def remove_columns (df, column = 'agenda'):
     # df = df.drop(['Unnamed: 0', 'index', 'merge_id', 'debate_id', 'merge_id_check', '' 'party.facts.id', 'iso3country', 'year', 'weeknum', 'org_name_location', 'context-start', 'context-stop'], axis=1)
     #easier to specify columns to keep - a lot to remove!
     df = df[['date','agenda', 'speech_id', 'speaker', 'text', 'section', 'parliament', 'match', 'match_name', 'week', 'weekstart', 'hansard_url', 'context', f'topic_{column}']]
+    return df
+
+#
+def join_to_archive(df):
+    archive = pd.read_csv(config.archive_location)      # append data to existing CSV data and overwrite the csv specified in config
+    dataframes = [archive, df]
+    df = pd.concat(dataframes)
     return df

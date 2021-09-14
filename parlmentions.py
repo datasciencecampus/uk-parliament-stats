@@ -6,7 +6,9 @@ from functions.data_processing.df_prep import create_date_variables
 from functions.data_processing.df_prep import create_hansard_url
 from functions.data_processing.df_prep import extract_context
 from functions.data_processing.df_prep import remove_columns
+from functions.data_processing.df_prep import join_to_archive
 from functions.model_rules.topic_classification import classify_debates
+from functions.data_download.parliament_xml_download import update_dates
 from functions.data_download.parliament_xml_download import download_xml_files
 from functions.data_download.parliament_rds_download import download_rds_file
 from functions.data_processing.parliament_xml_processing import process_xml_files
@@ -23,7 +25,14 @@ def parlmentions():
     config_checker()
 
     if config.download_data is True:
-        if config.data_type == 'XML':
+        if config.data_type == 'XML' and config.archive_update == False:
+            print('Downloading xml files [0/8]')
+            download_xml_files()
+            print('Processing xml files [1/8]')
+            filename = process_xml_files()
+        elif config.data_type == 'XML' and config.archive_update == True:
+            print('Using archive file -- reading, backing up, and using to update start & end dates...')
+            config.date_start, config.date_end = update_dates() #overwrite config date range 
             print('Downloading xml files [0/8]')
             download_xml_files()
             print('Processing xml files [1/8]')
@@ -66,7 +75,8 @@ def parlmentions():
     elif config.search_what == 'Agenda':
         print("Classifying debates from agenda [6/8]")
         df = classify_debates(df, column='agenda')
-
+    
+    #remove unnecessary columns before saving the output
     print("Cleaning output [7/8]")
     if config.search_what == 'Both':
         df = remove_columns(df, column = 'both')
@@ -78,9 +88,13 @@ def parlmentions():
 
     #output to csv - drop index
     print("Saving data to CSV [8/8]")
-    outputfile = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), 'outputs', 'data', f'uk_parl_stats_{os.path.basename(filename)}'))
-    df.to_csv(outputfile, index = False)
+    if config.archive_update == True:
+        df = join_to_archive(df)
+        df.to_csv(config.archive_location, index = False)  
+    elif config.archive_update == False:
+        outputfile = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), 'outputs', 'data', f'uk_parl_stats_{os.path.basename(filename)}'))
+        df.to_csv(outputfile, index = False)
     print("Done!")
     return
   

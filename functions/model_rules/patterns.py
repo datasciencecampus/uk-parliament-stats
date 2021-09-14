@@ -50,7 +50,6 @@ patterns_health = [
 [{'LEMMA': 'treat'}],
     ]
 
-=======
 #COVID-19 - not in 2015-2019 dataset
 
 #Population and Migration
