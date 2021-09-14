@@ -85,9 +85,13 @@ def remove_columns (df, column = 'agenda'):
     df = df[['date','agenda', 'speech_id', 'speaker', 'text', 'section', 'parliament', 'match', 'match_name', 'week', 'weekstart', 'hansard_url', 'context', f'topic_{column}']]
     return df
 
-#
+# append data to existing CSV data and overwrite the csv specified in config
 def join_to_archive(df):
-    archive = pd.read_csv(config.archive_location)      # append data to existing CSV data and overwrite the csv specified in config
+    archive = pd.read_csv(config.archive_location)
+    #force date & weekstart to date only to match what is in csv      
+    df["date"] = df["date"].dt.strftime('%Y-%m-%d')
+    df["weekstart"] = df["weekstart"].dt.strftime('%Y-%m-%d')
+    #join dfs together
     dataframes = [archive, df]
     df = pd.concat(dataframes)
     return df
