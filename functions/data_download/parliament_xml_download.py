@@ -85,7 +85,7 @@ def download(download_urls):
 
         else:
             if verbose == True:
-                print(f"{filename} all ready exists ({count}/{total_files})")
+                print(f"{filename} already exists ({count}/{total_files})")
         count += 1
 
 def download_xml_files():
