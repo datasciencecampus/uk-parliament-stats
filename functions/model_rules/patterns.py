@@ -14,6 +14,7 @@ patterns_exceptions = [
 [{'LEMMA': 'social'}, {'LEMMA': 'work'}, ],
 [{'LEMMA': 'social'}, {'LEMMA': 'worker'}, ],
 [{'LEMMA': 'public'}, {'LEMMA': 'house'}, ],
+[{'LEMMA': 'business'}, {'LEMMA': 'of'}, {'LEMMA': 'the'}, {'LEMMA': 'house'}, ],
     ]
 
 
