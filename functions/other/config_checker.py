@@ -40,7 +40,7 @@ def check_config_data_type(config):
     Raises
     ------
     ValueError
-        if data type is not 'RDS' or 'XML'
+        if data_type is not 'RDS' or 'XML'
     """
     if config.data_type not in ['RDS','XML']:
         raise ValueError("Error: data_type in config.py should either be 'RDS' or 'XML'")
