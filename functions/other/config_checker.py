@@ -180,7 +180,7 @@ def check_config_search_what(config):
     Raises
     ------
     ValueError
-        search what is not in selection
+        search_what is not in selection
     """
     if config.search_what not in ['Both','Text','Agenda']:
         raise ValueError("Error: search_what in config.py should either be Both, Text or Agenda")
