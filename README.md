@@ -1,10 +1,8 @@
 <img src="https://github.com/datasciencecampus/awesome-campus/blob/master/ons_dsc_logo.png">
 
 # parlmentions
-
+![Stability](https://img.shields.io/badge/stability-experimental-orange.svg)
 [![Twitter](https://img.shields.io/twitter/url?label=Follow%20%40DataSciCampus&style=social&url=https%3A%2F%2Ftwitter.com%2FDataSciCampus)](https://twitter.com/DataSciCampus)
-
-[![Stability](https://img.shields.io/badge/stability-experimental-orange.svg)
 
 ## About
 Identifying frequency and sentiment of mentions of an organisation and classifying debates from UK Parliament transcripts (Hansard)
