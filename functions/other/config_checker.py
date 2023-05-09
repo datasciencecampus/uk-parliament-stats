@@ -57,7 +57,7 @@ def check_config_download_data(config):
     Raises
     ------
     ValueError
-        if download data arguement is a boolean
+        if download_data argument is not a boolean
     """
     if config.download_data not in [True, False]:
         raise ValueError("Error: download_data in config.py should either be True or False")
