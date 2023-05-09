@@ -11,5 +11,5 @@ numpy
 
 #nlp
 spacy
-string
+string #base python
 sklearn
