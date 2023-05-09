@@ -1,7 +1,5 @@
 #xml download
 requests
-time
-os
 beautifulsoup4
 urllib3
 
@@ -11,5 +9,4 @@ numpy
 
 #nlp
 spacy
-string #base python
 sklearn
