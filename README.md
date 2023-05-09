@@ -1,8 +1,7 @@
 <img src="https://github.com/datasciencecampus/awesome-campus/blob/master/ons_dsc_logo.png">
 
 # parlmentions
-
-[![Tweet](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FDataSciCampus)
+<img src="{https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Ftwitter.com%2FDataSciCampus}" />
 
 ## About
 Identifying frequency and sentiment of mentions of an organisation and classifying debates from UK Parliament transcripts (Hansard)
