@@ -10,14 +10,14 @@ download_data = True # Download data or not. Options: True or False
 file_size = '1000' # Specify the size of the file. Options: 'All', '1000', '10000', or '100000'
 
 #### For XML ####
-archive_update = True #Specify if you wish to use an archive file of already processed XML and only process new data up today's date. Useful for regular updating. Options: True or False
+archive_update = False #Specify if you wish to use an archive file of already processed XML and only process new data up today's date. Useful for regular updating. Options: True or False
 archive_backup = True # Specify whether you wish to make a backup of the archive before appending new data - will create a date+timestamped file in the same folder as the archive. Options: True or False
 
 sections = ['debates'] # Specify
             # sections. Options: ['debates','divisionsonly','future', 'london-mayors-questions', 'lordsdivisionsonly',
             # 'lordspages', 'ni','regmem','sp-motions','sp-new','sp-questions','sp-written','sp','standing','westminhall'
-date_start = '18/05/2015' # specify start date of files
-date_end = '31/07/2021' # specify end date of files
+date_start = '27/03/2023' # specify start date of files
+date_end = '31/03/2023' # specify end date of files
 use_proxies = True # Use proxies or not. Options: True or False.
 
 
