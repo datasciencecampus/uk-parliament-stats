@@ -50,21 +50,21 @@ To run the code run `parlmentions.py`. Requires spaCy `en_core_web_md`:
 
 ## Project Structure
 
-**/data** location for downloaded files
-**/outputs** location where outputs are saved
-**/src** functions for the pipeline
-   /data_download functions for downloading data
-   /data_processing functions for processing data
-   /model_ML functions for training the model
-   /model_rules functions for model control
-   /other functions with miscilanious functionality
-**/tests** tests for associated functions
-**.gitignore** files to ignore when interacting with git
-**.pre-commit-hooks.yaml** configuration for pre-commits
-**README.md** important information about the repository
-**config.py** - configuration settings for the pipeline
-**uk-parliament-stats.py** - file to run the pipeline
-**requirements.txt** - information about the package dependencies
+**/data** location for downloaded files <br>
+**/outputs** location where outputs are saved <br>
+**/src** functions for the pipeline <br>
+   /data_download functions for downloading data <br>
+   /data_processing functions for processing data <br>
+   /model_ML functions for training the model <br>
+   /model_rules functions for model control <br>
+   /other functions with miscilanious functionality <br>
+**/tests** tests for associated functions <br>
+**.gitignore** files to ignore when interacting with git <br>
+**.pre-commit-hooks.yaml** configuration for pre-commits <br>
+**README.md** important information about the repository <br>
+**config.py** - configuration settings for the pipeline<br>
+**uk-parliament-stats.py** - file to run the pipeline <br>
+**requirements.txt** - information about the package dependencies <br>
 
 
 
