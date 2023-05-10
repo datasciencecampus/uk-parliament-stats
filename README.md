@@ -50,6 +50,19 @@ To run the code run `parlmentions.py`. Requires spaCy `en_core_web_md`:
 
 ## Project Structure
 
+### /data
+### /outputs
+### /src 
+### /tests
+### .gitignore
+### .pre-commit-hooks.yaml
+### README.md
+### config.py
+### uk-parliament-stats.py
+### requirements.txt
+
+
+
 ### parlmentions.py
 
 The main python file to call.
