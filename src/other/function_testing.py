@@ -8,7 +8,7 @@ Created on Thu Jun 17 14:19:31 2021
 
 import pandas as pd
 
-rawdatafile = "raw-data/commonsdebates_2015_2019-utf8.csv"
+rawdatafile = "data/commonsdebates_2015_2019-utf8.csv"
 
 # keywords to search for in speeches
 keywords = ["ONS","Office for National Statistics", "Office of National Statistics", "UKSA", "UK Statistics Authority", "OSR", "Office for Statistics Regulation", "Office of Statistics Regulation"]

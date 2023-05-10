@@ -9,11 +9,11 @@ import re
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-from functions.other.ons_network import set_ons_proxies
+from src.other.ons_network import set_ons_proxies
 import config
 import pandas as pd
 
-localpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'raw-data', 'xml'))
+localpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'xml'))
 verbose = config.verbose
 
 def check_if_folders_exist(config):

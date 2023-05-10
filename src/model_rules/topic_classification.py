@@ -25,7 +25,7 @@ Inequalities/Wellbeing
 
 import pandas as pd
 import spacy
-from functions.model_rules import patterns
+from src.model_rules import patterns
 from spacy.matcher import Matcher
 
 

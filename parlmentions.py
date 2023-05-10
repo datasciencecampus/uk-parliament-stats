@@ -1,18 +1,18 @@
 import pandas as pd
 import os
 
-from functions.data_processing.df_prep import find_org_mentions
-from functions.data_processing.df_prep import create_date_variables
-from functions.data_processing.df_prep import create_hansard_url
-from functions.data_processing.df_prep import extract_context
-from functions.data_processing.df_prep import remove_columns
-from functions.data_processing.df_prep import join_to_archive
-from functions.model_rules.topic_classification import classify_debates
-from functions.data_download.parliament_xml_download import update_dates
-from functions.data_download.parliament_xml_download import download_xml_files
-from functions.data_download.parliament_rds_download import download_rds_file
-from functions.data_processing.parliament_xml_processing import process_xml_files
-from functions.other.config_checker import config_checker
+from src.data_processing.df_prep import find_org_mentions
+from src.data_processing.df_prep import create_date_variables
+from src.data_processing.df_prep import create_hansard_url
+from src.data_processing.df_prep import extract_context
+from src.data_processing.df_prep import remove_columns
+from src.data_processing.df_prep import join_to_archive
+from src.model_rules.topic_classification import classify_debates
+from src.data_download.parliament_xml_download import update_dates
+from src.data_download.parliament_xml_download import download_xml_files
+from src.data_download.parliament_rds_download import download_rds_file
+from src.data_processing.parliament_xml_processing import process_xml_files
+from src.other.config_checker import config_checker
 
 import config
 
@@ -45,7 +45,7 @@ def parlmentions():
 
     if filename is None:
         filename = os.path.abspath(
-            os.path.join(os.path.dirname(__file__), 'raw-data', config.data_type, config.csv_filename))
+            os.path.join(os.path.dirname(__file__), 'data', config.data_type, config.csv_filename))
 
     print("Reading CSV [2/8]" )
     df = pd.read_csv(filename)

@@ -58,7 +58,7 @@ The main python file to call.
 
 The main configuration file for the parlmentions.py pipeline.
 
-### /raw-data 
+### /data 
 
 Where the downloaded XML or RDS files are saved.
 
@@ -70,39 +70,39 @@ Where the output files are saved.
 
 Files used in user/stakeholder engagement.
 
-### /functions
+### /src
 
 Functions to download, parse and analyse the data.
 
-##### /functions/data_download/parliament_xml_download.py
+##### /src/data_download/parliament_xml_download.py
 
 Python script for downloading XML files of Hansard from https://www.theyworkforyou.com/pwdata/scrapedxml/ using variables from `config.py`. 
 
-#### /functions/data_download/parliament_rds_download.py
+#### /src/data_download/parliament_rds_download.py
 
 Python script for downloading the Harvard RDS file as a CSV. Use `config.py` to specify if you want to download the entire dataset (2.2 GB) or random cuts.
 
-#### /functions/data_processing/parliament_xml_processing.py
+#### /src/data_processing/parliament_xml_processing.py
 
 Python script for processing the downloaded XML files and saving to a CSV file. 
 
-#### /functions/data_processing/df_prep.py
+#### /src/data_processing/df_prep.py
 
 Python script for preparing the saved CSV file for analysis.
 
-#### /functions/model_rules/patterns.py
+#### /src/model_rules/patterns.py
 
 A configuration file holding labelled classification rules.
 
-#### /functions/model_rules/topic_classification.py
+#### /src/model_rules/topic_classification.py
 
 Python script that runs a spaCy model to classify topics.
 
-#### /functions/other/config_checker.py
+#### /src/other/config_checker.py
 
 Python script that makes sure the config file is ok.
 
-#### /functions/other/ons_network.py
+#### /src/other/ons_network.py
 
 Python script that calls proxies from the ONS network.
 
