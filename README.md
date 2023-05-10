@@ -1,6 +1,9 @@
 <img src="https://github.com/datasciencecampus/awesome-campus/blob/master/ons_dsc_logo.png">
 
 # parlmentions
+[![Stability](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#experimental)
+[![codecov](https://codecov.io/gh/datasciencecampus/uk-parliament-stats/branch/main/graph/badge.svg?token=N8f9f7nbOs)](https://codecov.io/gh/datasciencecampus/uk-parliament-stats)
+[![Twitter](https://img.shields.io/twitter/url?label=Follow%20%40DataSciCampus&style=social&url=https%3A%2F%2Ftwitter.com%2FDataSciCampus)](https://twitter.com/DataSciCampus)
 
 ## About
 Identifying frequency and sentiment of mentions of an organisation and classifying debates from UK Parliament transcripts (Hansard)
@@ -48,63 +51,21 @@ To run the code run `parlmentions.py`. Requires spaCy `en_core_web_md`:
 
 ## Project Structure
 
-### parlmentions.py
-
-The main python file to call.
-
-### config.py
-
-The main configuration file for the parlmentions.py pipeline.
-
-### /raw-data 
-
-Where the downloaded XML or RDS files are saved.
-
-### /outputs
-
-Where the output files are saved.
-
-### /user-engagement
-
-Files used in user/stakeholder engagement.
-
-### /functions
-
-Functions to download, parse and analyse the data.
-
-##### /functions/data_download/parliament_xml_download.py
-
-Python script for downloading XML files of Hansard from https://www.theyworkforyou.com/pwdata/scrapedxml/ using variables from `config.py`. 
-
-#### /functions/data_download/parliament_rds_download.py
-
-Python script for downloading the Harvard RDS file as a CSV. Use `config.py` to specify if you want to download the entire dataset (2.2 GB) or random cuts.
-
-#### /functions/data_processing/parliament_xml_processing.py
-
-Python script for processing the downloaded XML files and saving to a CSV file. 
-
-#### /functions/data_processing/df_prep.py
-
-Python script for preparing the saved CSV file for analysis.
-
-#### /functions/model_rules/patterns.py
-
-A configuration file holding labelled classification rules.
-
-#### /functions/model_rules/topic_classification.py
-
-Python script that runs a spaCy model to classify topics.
-
-#### /functions/other/config_checker.py
-
-Python script that makes sure the config file is ok.
-
-#### /functions/other/ons_network.py
-
-Python script that calls proxies from the ONS network.
-
-^ To be removed if made public.
+`/data` location for downloaded files <br> <br>
+`/outputs` location where outputs are saved <br> <br>
+`/src` functions for the pipeline <br>
+&nbsp; &nbsp; &nbsp; `/data_download` functions for downloading data <br>
+&nbsp; &nbsp; &nbsp; `/data_processing` functions for processing data <br>
+&nbsp; &nbsp; &nbsp; `/model_ML` functions for training the model <br>
+&nbsp; &nbsp; &nbsp; `/model_rules` functions for model control <br>
+&nbsp; &nbsp; &nbsp; `/other` functions with miscellaneous functionality <br> <br>
+`/tests` tests for associated functions <br> <br>
+`.gitignore` files to ignore when interacting with git <br> <br>
+`.pre-commit-hooks.yaml` configuration for pre-commits <br> <br>
+`README.md` important information about the repository <br> <br>
+`config.py` - configuration settings for the pipeline<br> <br>
+`parlmentions.py` - file to run the pipeline <br> <br>
+`requirements.txt` - information about the package dependencies <br> <br>
 
 ## Acknowledgements
 

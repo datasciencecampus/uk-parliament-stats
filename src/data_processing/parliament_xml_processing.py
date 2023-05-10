@@ -8,8 +8,8 @@ from lxml import etree
 
 import config
 
-localpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'raw-data', 'xml'))
-savepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'raw-data', 'xml'))
+localpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'xml'))
+savepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'xml'))
 
 verbose = config.verbose
 
@@ -185,7 +185,7 @@ def create_dataframe():
     df = pd.DataFrame(columns=['speech_id','speaker','merge_id','text','debate_id','agenda',
                                'merge_id_check','merge_id_test','merge_id_split','testing','date','section','parliament'])
     xml_files = xml_file_list()
-    # xml_files = ['D:\\uk-parliament-stats\\raw-data\\xml\\debates\\debates2015-12-17a.xml']
+    # xml_files = ['D:\\uk-parliament-stats\\data\\xml\\debates\\debates2015-12-17a.xml']
     count = 1
     for xml_file in xml_files:
         if verbose == True:
