@@ -1,13 +1,13 @@
 #xml download
-requests
-beautifulsoup4
-urllib3
-lxml
+requests==2.30.0
+beautifulsoup4==4.12.2
+urllib3==1.26.15
+lxml==4.9.2
 
 #data prep
-pandas
-numpy
+pandas==1.5.3
+numpy==1.24.3
 
 #nlp
-spacy
-scikit-learn
+spacy==3.5.0
+scikit-learn==1.2.2
