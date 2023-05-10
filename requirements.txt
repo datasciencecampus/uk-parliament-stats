@@ -2,6 +2,7 @@
 requests
 beautifulsoup4
 urllib3
+lxml
 
 #data prep
 pandas
@@ -9,4 +10,4 @@ numpy
 
 #nlp
 spacy
-sklearn
+scikit-learn
