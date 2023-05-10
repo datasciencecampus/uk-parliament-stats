@@ -10,8 +10,6 @@ jobs:
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v3
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Setup Python
       uses: actions/setup-python@v4
