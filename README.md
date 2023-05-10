@@ -66,66 +66,6 @@ To run the code run `parlmentions.py`. Requires spaCy `en_core_web_md`:
 `uk-parliament-stats.py` - file to run the pipeline <br> <br>
 `requirements.txt` - information about the package dependencies <br> <br>
 
-
-
-### parlmentions.py
-
-The main python file to call.
-
-### config.py
-
-The main configuration file for the parlmentions.py pipeline.
-
-### /data 
-
-Where the downloaded XML or RDS files are saved.
-
-### /outputs
-
-Where the output files are saved.
-
-### /user-engagement
-
-Files used in user/stakeholder engagement.
-
-### /src
-
-Functions to download, parse and analyse the data.
-
-##### /src/data_download/parliament_xml_download.py
-
-Python script for downloading XML files of Hansard from https://www.theyworkforyou.com/pwdata/scrapedxml/ using variables from `config.py`. 
-
-#### /src/data_download/parliament_rds_download.py
-
-Python script for downloading the Harvard RDS file as a CSV. Use `config.py` to specify if you want to download the entire dataset (2.2 GB) or random cuts.
-
-#### /src/data_processing/parliament_xml_processing.py
-
-Python script for processing the downloaded XML files and saving to a CSV file. 
-
-#### /src/data_processing/df_prep.py
-
-Python script for preparing the saved CSV file for analysis.
-
-#### /src/model_rules/patterns.py
-
-A configuration file holding labelled classification rules.
-
-#### /src/model_rules/topic_classification.py
-
-Python script that runs a spaCy model to classify topics.
-
-#### /src/other/config_checker.py
-
-Python script that makes sure the config file is ok.
-
-#### /src/other/ons_network.py
-
-Python script that calls proxies from the ONS network.
-
-^ To be removed if made public.
-
 ## Acknowledgements
 
 Data used to build and test this project comes from Harvard Dataverse (https://dataverse.harvard.edu/file.xhtml?persistentId=doi:10.7910/DVN/L4OAKN/W2SVMF&version=1.0). Due to the reliance of `R` for RDS files, we have converted this file to a CSV file ourselves and hosted on a server.
