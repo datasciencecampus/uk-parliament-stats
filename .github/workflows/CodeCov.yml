@@ -6,6 +6,7 @@ jobs:
     env:
       OS: ubuntu-latest
       PYTHON: '3.10'
+      
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v3
