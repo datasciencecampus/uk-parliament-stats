@@ -64,7 +64,7 @@ To run the code run `parlmentions.py`. Requires spaCy `en_core_web_md`:
 `.pre-commit-hooks.yaml` configuration for pre-commits <br> <br>
 `README.md` important information about the repository <br> <br>
 `config.py` - configuration settings for the pipeline<br> <br>
-`uk-parliament-stats.py` - file to run the pipeline <br> <br>
+`parlmentions.py` - file to run the pipeline <br> <br>
 `requirements.txt` - information about the package dependencies <br> <br>
 
 ## Acknowledgements
