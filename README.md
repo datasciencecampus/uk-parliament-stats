@@ -58,7 +58,7 @@ To run the code run `parlmentions.py`. Requires spaCy `en_core_web_md`:
 &nbsp; &nbsp; &nbsp; `/data_processing` functions for processing data <br>
 &nbsp; &nbsp; &nbsp; `/model_ML` functions for training the model <br>
 &nbsp; &nbsp; &nbsp; `/model_rules` functions for model control <br>
-&nbsp; &nbsp; &nbsp; `/other` functions with miscilanious functionality <br> <br>
+&nbsp; &nbsp; &nbsp; `/other` functions with miscellaneous functionality <br> <br>
 `/tests` tests for associated functions <br> <br>
 `.gitignore` files to ignore when interacting with git <br> <br>
 `.pre-commit-hooks.yaml` configuration for pre-commits <br> <br>
