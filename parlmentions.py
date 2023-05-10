@@ -22,7 +22,7 @@ def parlmentions():
 
     filename = None
 
-    config_checker()
+    config_checker(config)
 
     if config.download_data is True:
         if config.data_type == 'XML' and config.archive_update == False:
