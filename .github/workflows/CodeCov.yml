@@ -7,13 +7,13 @@ jobs:
       OS: ubuntu-latest
       PYTHON: '3.10'
     steps:
-    - uses: checkout@v2
+    - name: Checkout Repo
+      uses: checkout@v2
       with:
-        fetch-depth: ‘2’
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Setup Python
-      uses: actions/setup-python@master
+      uses: actions/setup-python@v4
       with:
         python-version: 3.10
         
@@ -21,6 +21,7 @@ jobs:
       run: |
         pip install coverage
         coverage run -m unittest
+        
     - name: Upload Coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
