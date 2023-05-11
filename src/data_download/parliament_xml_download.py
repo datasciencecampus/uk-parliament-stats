@@ -30,7 +30,7 @@ def get_download_links(config):
         section_url = 'https://www.theyworkforyou.com/pwdata/scrapedxml/' + section        
         if config.use_proxies == True:
             try:
-                proxies = set_ons_proxies(ssl=False)
+                proxies = set_ons_proxies(proxy_list_fp=config.proxy_list_fp, ssl=False)
                 page = requests.get(section_url, proxies=proxies, verify=False)
             except ProxyError:
                 print("<<< No proxies worked - waiting 60 seconds then re-trying >>>")
@@ -67,7 +67,7 @@ def download(download_urls):
         if os.path.isfile(filename) is False:
             if config.use_proxies == True:
                 try:
-                    proxies = set_ons_proxies(ssl=False)
+                    proxies = set_ons_proxies(proxy_list_fp=config.proxy_list_fp, ssl=False)
                     xml_file = requests.get(download_url, proxies=proxies, verify=False)
                 except ProxyError:
                     print("<<< No proxies worked - waiting 60 seconds then re-trying >>>")
