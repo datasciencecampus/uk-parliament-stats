@@ -8,26 +8,25 @@ set_ons_proxies function by Mitchell Edmunds@ONS
 """
 
 import requests
+import json
 
 #set ONS proxy function
 
 
-def set_ons_proxies(ssl=False):
+def set_proxies(proxy_list_fp, ssl=False):
     """
-    The ONS uses two proxy servers, this function finds the right
-    one and saves them in a dictionary for requests.
+    Organisations often use proxy servers, this function finds the right
+    one from a list and saves them in a dictionary for requests.
     
     Parameters
     ----------
+    proxy_list_fp: filepath to json containing proxy options
     ssl: filepath to the CA certificate for SSL verification
-    
+
     """
     # Try each proxy in the following order.
-    proxy_list = [
-        "http://10.173.135.52:8080",
-        "http://CR1-PSG-DMZ-VIP:8080",
-        "http://CR2-PSG-DMZ-VIP:8080",
-    ]
+    with open(proxy_list_fp, 'r') as f:
+        proxy_list = json.load(f)
 
     test_url = "https://www.google.co.uk/"
     stop_at = len(proxy_list)-1    
