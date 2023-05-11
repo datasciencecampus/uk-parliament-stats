@@ -13,10 +13,10 @@ import json
 #set ONS proxy function
 
 
-def set_ons_proxies(proxy_list_fp, ssl=False):
+def set_proxies(proxy_list_fp, ssl=False):
     """
-    The ONS uses two proxy servers, this function finds the right
-    one and saves them in a dictionary for requests.
+    Organisations often use proxy servers, this function finds the right
+    one from a list and saves them in a dictionary for requests.
     
     Parameters
     ----------
