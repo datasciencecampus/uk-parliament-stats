@@ -9,7 +9,7 @@ import re
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-from src.other.ons_network import set_proxies
+from src.other.network_config import set_proxies
 import config
 import pandas as pd
 
