@@ -190,7 +190,7 @@ def create_dataframe():
     for xml_file in xml_files:
         if verbose == True:
             print(f"parsing {xml_file} ({count}/{len(xml_files)})")
-        df = df.append(parse_file(xml_file))
+        df = pd.concat([df,parse_file(xml_file)], axis=0, join='outer')
         count += 1
     return df
 
