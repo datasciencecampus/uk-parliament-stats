@@ -41,7 +41,7 @@ The process has been modularised so that the user can either use historic data o
 
 To clone the repo, use:
 
-`git clone https://github.com/rozzahh/uk-parliament-stats.git`
+`git clone https://github.com/datasciencecampus/uk-parliament-stats.git`
 
 See `requirements.txt` for the required packages.
 
