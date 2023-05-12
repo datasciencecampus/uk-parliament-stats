@@ -10,6 +10,24 @@ Identifying frequency and sentiment of mentions of an organisation and classifyi
 
 ## Installation
 
+To clone the repo, use:
+
+`git clone https://github.com/datasciencecampus/uk-parliament-stats.git`
+
+See `requirements.txt` for the required packages. Package versions haven't been extensively tested so other versions might be suitable if the suggested versions aren't available.
+
+The spaCy language model `en_core_web_md` is also required. This can be downloaded using:
+
+`python -m spacy download en_core_web_md`
+
+If you have difficulties with this, a `.whl` for the model can be [manually downloaded from GitHub](https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.5.0/en_core_web_md-3.5.0-py3-none-any.whl), which can then be installed using `pip`.
+
+### Proxy Setup
+
+The package includes functions to overcome difficulties that arise when using organisational proxy servers. The `config.py` has an option to turn this functionality on, `use_proxies`, as well as the filepath to look for a `proxies.json` file containing a list of possible proxies, `proxy_list_fp`. ONS colleagues can find a working copy of this file on [SharePoint](https://officenationalstatistics.sharepoint.com/sites/dscdsc/_layouts/15/download.aspx?UniqueId=042aa1d3ef804668aeb1200720dc683e&e=3crWBs). It is recommended to then put this file in a folder at the highest level of the repo called `/secrets/`.
+
+**NOTE:** we have not tested this functionality from within departments other than ONS, so results may vary depending on the permissiveness of the environment.
+
 ### Pre-commit actions
 This repository contains a configuration of pre-commit hooks. These are language agnostic and focussed on repository security (such as detection of passwords and API keys). If approaching this project as a developer, you are encouraged to install and enable `pre-commits` by running the following in your shell:
    1. Install `pre-commit`:
@@ -39,15 +57,11 @@ The process has been modularised so that the user can either use historic data o
 
 ## Using
 
-To clone the repo, use:
+First, configure the `config.py` to align with the intended analysis, bearing in mind whether you are downloading data or analysing pre-downloaded data and if you are using proxy settings or not. Update the `organisations` list to search for different government organisations (these are ONS, OSR and UKSA by default).
 
-`git clone https://github.com/datasciencecampus/uk-parliament-stats.git`
+Then run the analysis from the command line using:
 
-See `requirements.txt` for the required packages.
-
-To run the code run `parlmentions.py`. Requires spaCy `en_core_web_md`:
-
-` python -m spacy download en_core_web_md`
+`python parlmentions.py`
 
 ## Project Structure
 
