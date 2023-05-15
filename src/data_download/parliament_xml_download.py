@@ -13,10 +13,10 @@ from src.other.network_config import set_proxies
 import config
 import pandas as pd
 
-localpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'xml'))
+#localpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'xml'))
 verbose = config.verbose
 
-def check_if_folders_exist(config):
+def check_if_folders_exist(config, localpath):
     for section in config.sections:
         check_folder = os.path.isdir(os.path.join(localpath, section))
         if not check_folder:
@@ -56,7 +56,7 @@ def get_download_links(config):
 
     return download_urls, section_list
 
-def download(download_urls):
+def download(download_urls, localpath):
     sleep_time = 30
     total_files = len(download_urls)
     count = 1
@@ -88,10 +88,10 @@ def download(download_urls):
                 print(f"{filename} already exists ({count}/{total_files})")
         count += 1
 
-def download_xml_files():
-    check_if_folders_exist(config)
+def download_xml_files(localpath):
+    check_if_folders_exist(config, localpath)
     download_urls, section_list = get_download_links(config)
-    download(download_urls)
+    download(download_urls, localpath)
 
 
 

@@ -16,9 +16,10 @@ from src.other.config_checker import config_checker
 
 import config
 
+localpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'xml'))
 
 # function to call all processing functions to create processed csv for use in dashboard
-def parlmentions():
+def parlmentions(localpath):
 
     filename = None
 
@@ -27,7 +28,7 @@ def parlmentions():
     if config.download_data is True:
         if config.data_type == 'XML' and config.archive_update == False:
             print('Downloading xml files [0/8]')
-            download_xml_files()
+            download_xml_files(localpath)
             print('Processing xml files [1/8]')
             filename = process_xml_files()
         elif config.data_type == 'XML' and config.archive_update == True:
@@ -99,4 +100,4 @@ def parlmentions():
     return
   
 # call function
-parlmentions()
+parlmentions(localpath)
