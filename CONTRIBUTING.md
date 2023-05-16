@@ -23,7 +23,7 @@ If you are reporting a bug, please include:
 - If you don't have steps to reproduce the bug, just note your observations in as much detail as you can.
   Questions to start a discussion about the issue are welcome.
   
- ### Fix Bugs
+### Fix Bugs
 
 Look through the GitHub issues for bugs.
 Anything tagged with "bug" is open to whoever wants to implement it.
