@@ -36,7 +36,7 @@ def try_proxies(config, section_url):
             attempts += 1
     if not success:
         raise ProxyError("<<< Proxy try attempts limit reached - no success>>>")
-    return(page)
+    return page
 
 def get_download_links(config):
     download_urls = []
