@@ -13,7 +13,7 @@ You can contribute in many ways:
 
 ### Report Bugs
 
-Report bugs at [https://github.com/cookiecutter/cookiecutter/issues](https://github.com/cookiecutter/cookiecutter/issues).
+Report bugs at [https://github.com/datasciencecampus/uk-parliament-stats/issues](https://github.com/datasciencecampus/uk-parliament-stats/issues).
 
 If you are reporting a bug, please include:
 
@@ -146,3 +146,5 @@ Before you submit a pull request, check that it meets these guidelines:
         """Return True if the given message sounds piratical."""
         return re.search(r"(?i)(arr|avast|yohoho)!", message) is not None
     ```
+Acknowledgement: 
+This contribution guidance has been mostly replicated from great guidance at [cookiecutter](https://github.com/cookiecutter/cookiecutter/blob/main/CONTRIBUTING.md). 
