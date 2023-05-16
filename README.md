@@ -20,7 +20,7 @@ The spaCy language model `en_core_web_md` is also required. This can be download
 
 `python -m spacy download en_core_web_md`
 
-If you have difficulties with this, a `.whl` for the model can be [manually downloaded from GitHub](https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.5.0/en_core_web_md-3.5.0-py3-none-any.whl), which can then be installed using `pip`.
+If you have difficulties with this, a `.whl` for the model can be [manually downloaded from GitHub](https://github.com/explosion/spacy-models/releases/download/en_core_web_md-3.5.0/en_core_web_md-3.5.0-py3-none-any.whl), which can then be installed using `pip` (i.e. `pip install <downloaded-file-name>.whl`).
 
 ### Proxy Setup
 
@@ -40,9 +40,7 @@ This repository contains a configuration of pre-commit hooks. These are language
       ```
       pre-commit install
       ```
-Once pre-commits are activated, whenever you commit to this repository a series of checks will be executed. The pre-commits include checking for security keys, large files and unresolved merge conflict headers. The use of active pre-commits are highly encouraged and the given hooks can be expanded with Python or R specific hooks that can automate the code style and linting. For example, the `flake8` and `black` hooks are useful for maintaining consistent Python code formatting.
-
-**NOTE:** Pre-commit hooks execute Python, so it expects a working Python build.
+Once pre-commits are activated, whenever you commit to this repository a series of checks will be executed. The pre-commits include checking for security keys, large files and unresolved merge conflict headers.
 
 ## Workflow
 
