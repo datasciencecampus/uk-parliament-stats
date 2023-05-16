@@ -20,7 +20,7 @@ date_start = '27/03/2023' # specify start date of files
 date_end = '31/03/2023' # specify end date of files
 use_proxies = True # Use proxies or not. Options: True or False.
 proxy_list_fp = "secrets/proxies.json"
-
+proxy_try_attempts = 5 # number of times a proxy is attempted before returning an error
 
 ## ---- Load options ---- ##
 

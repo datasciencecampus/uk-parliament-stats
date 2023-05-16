@@ -22,6 +22,20 @@ def check_if_folders_exist(config):
         if not check_folder:
             os.makedirs(os.path.join(localpath, section))
 
+def try_proxies(config, section_url):
+    attempts = 0
+    success = False
+    while attempts <= config.proxy_try_attempts and not success:
+        try:
+            proxies = set_proxies(proxy_list_fp=config.proxy_list_fp, ssl=False)
+            page = requests.get(section_url, proxies=proxies, verify=False)
+            success = True
+        except ProxyError:
+            print("<<< No proxies worked - waiting 10 seconds then re-trying >>>")
+            time.sleep(10)
+            attempts += 1
+    if not success:
+        raise ProxyError("<<< Proxy try attempts limit reached - no success>>>")
 
 def get_download_links(config):
     download_urls = []
@@ -29,19 +43,10 @@ def get_download_links(config):
     for section in config.sections:
         section_url = 'https://www.theyworkforyou.com/pwdata/scrapedxml/' + section        
         if config.use_proxies == True:
-            try:
-                proxies = set_proxies(proxy_list_fp=config.proxy_list_fp, ssl=False)
-                page = requests.get(section_url, proxies=proxies, verify=False)
-            except ProxyError:
-                print("<<< No proxies worked - waiting 60 seconds then re-trying >>>")
-                time.sleep(60)
+            try_proxies(config, section_url)
         else:
-            try:
-                page = requests.get(section_url, verify=False)
-            except ProxyError:
-                print("<<< No proxies worked - waiting 60 seconds then re-trying >>>")
-                time.sleep(60)
-     
+            page = requests.get(section_url, verify=False)
+                 
         data = page.text
         soup = BeautifulSoup(data, features="lxml")
         for link in soup.find_all('a'):
