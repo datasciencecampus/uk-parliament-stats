@@ -36,6 +36,7 @@ def try_proxies(config, section_url):
             attempts += 1
     if not success:
         raise ProxyError("<<< Proxy try attempts limit reached - no success>>>")
+    return(page)
 
 def get_download_links(config):
     download_urls = []
@@ -43,7 +44,7 @@ def get_download_links(config):
     for section in config.sections:
         section_url = 'https://www.theyworkforyou.com/pwdata/scrapedxml/' + section        
         if config.use_proxies == True:
-            try_proxies(config, section_url)
+            page = try_proxies(config, section_url)
         else:
             page = requests.get(section_url, verify=False)
                  
