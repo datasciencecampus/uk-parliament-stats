@@ -50,65 +50,8 @@ If you are proposing a feature:
 - Remember that this is a volunteer-driven project, and that contributions are welcome :)
 
 ## Setting Up the Code for Local Development
+** TO DO **
 
-Here's how to set up `uk-parliament-stats` for local development.
-
-1. Fork the `uk-parliament-stats` repo on GitHub.
-2. Clone your fork locally:
-
-   ```bash
-   git clone git@github.com:your_name_here/datasciencecampus/uk-parliament-stats.git
-   ```
-
-3. Install your local copy into a virtualenv.
-   Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development:
-
-   ```bash
-   cd uk-parliament-stats/
-   pip install -e .
-   ```
-
-4. Create a branch for local development:
-
-   ```bash
-   git checkout -b name-of-your-bugfix-or-feature
-   ```
-
-Now you can make your changes locally.
-
-5. When you're done making changes, check that your changes pass the tests and lint check:
-
-   ```bash
-   pip install tox
-   tox
-   ```
-
-   Please note that tox runs lint check automatically, since we have a test environment for it.
-
-   If you feel like running only the lint environment, please use the following command:
-
-   ```bash
-   make lint
-   ```
-
-6. Ensure that your feature or commit is fully covered by tests. Check report after regular tox run.
-   You can also run coverage only report and get html report with statement by statement highlighting:
-
-   ```bash
-   make coverage
-   ```
-
-   You report will be placed to `htmlcov` directory. Please do not include this directory to your commits.
-   By default this directory in our `.gitignore` file.
-
-7. Commit your changes and push your branch to GitHub:
-
-   ```bash
-   git add .
-   git commit -m "Your detailed description of your changes."
-   git push origin name-of-your-bugfix-or-feature
-   ```
-   
 ## Contributor Guidelines
 
 ### Pull Request Guidelines
