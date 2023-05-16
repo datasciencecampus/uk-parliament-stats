@@ -35,7 +35,7 @@ def try_proxies(config, section_url):
             time.sleep(10)
             attempts += 1
     if not success:
-        raise ProxyError("<<< Proxy try attempts limit reached - no success>>>")
+        raise ProxyError("<<< Proxy try attempts limit reached - no success >>>")
     return page
 
 def get_download_links(config):
@@ -72,18 +72,20 @@ def download(download_urls):
 
         if os.path.isfile(filename) is False:
             if config.use_proxies == True:
-                try:
-                    proxies = set_proxies(proxy_list_fp=config.proxy_list_fp, ssl=False)
-                    xml_file = requests.get(download_url, proxies=proxies, verify=False)
-                except ProxyError:
-                    print("<<< No proxies worked - waiting 60 seconds then re-trying >>>")
-                    time.sleep(60)
+                xml_file = try_proxies(config, download_url)
             else:
-                try:
-                    xml_file = requests.get(download_url, verify=False)
-                except ProxyError:
-                    print("<<< proxy error - waiting 60 seconds then re-trying >>>")
-                    time.sleep(60)
+                attempts = 0
+                success = False
+                while attempts <= config.proxy_try_attempts and not success:
+                    try:
+                        xml_file = requests.get(download_url, verify=False)
+                        success = True
+                    except ProxyError:
+                        print("<<< Proxy error - waiting 10 seconds then re-trying >>>")
+                        time.sleep(10)
+                        attempts += 1
+                if not success:
+                    raise ProxyError("<<< Proxy try attempts limit reached - no success >>>")
             open(filename, 'wb').write(xml_file.content)
             if verbose == True:
                 print(f"downloaded file from: {download_url} \n to: {filename} ({count}/{total_files})")
