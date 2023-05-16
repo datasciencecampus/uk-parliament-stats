@@ -147,4 +147,4 @@ Before you submit a pull request, check that it meets these guidelines:
         return re.search(r"(?i)(arr|avast|yohoho)!", message) is not None
     ```
 Acknowledgement: 
-This contribution guidance has been mostly replicated from great guidance at [cookiecutter](https://github.com/cookiecutter/cookiecutter/blob/main/CONTRIBUTING.md). 
+This contribution guidance has been mostly replicated from a great example in the [cookiecutter](https://github.com/cookiecutter/cookiecutter/blob/main/CONTRIBUTING.md) repository. 
