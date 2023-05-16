@@ -22,13 +22,13 @@ def check_if_folders_exist(config):
         if not check_folder:
             os.makedirs(os.path.join(localpath, section))
 
-def try_proxies(config, section_url):
+def try_proxies(config, url):
     attempts = 0
     success = False
     while attempts <= config.proxy_try_attempts and not success:
         try:
             proxies = set_proxies(proxy_list_fp=config.proxy_list_fp, ssl=False)
-            page = requests.get(section_url, proxies=proxies, verify=False)
+            page = requests.get(url, proxies=proxies, verify=False)
             success = True
         except ProxyError:
             print("<<< No proxies worked - waiting 10 seconds then re-trying >>>")
@@ -74,19 +74,10 @@ def download(download_urls):
             if config.use_proxies == True:
                 xml_file = try_proxies(config, download_url)
             else:
-                attempts = 0
-                success = False
-                while attempts <= config.proxy_try_attempts and not success:
-                    try:
-                        xml_file = requests.get(download_url, verify=False)
-                        success = True
-                    except ProxyError:
-                        print("<<< Proxy error - waiting 10 seconds then re-trying >>>")
-                        time.sleep(10)
-                        attempts += 1
-                if not success:
-                    raise ProxyError("<<< Proxy try attempts limit reached - no success >>>")
+                xml_file = requests.get(download_url, verify=False)
+
             open(filename, 'wb').write(xml_file.content)
+            
             if verbose == True:
                 print(f"downloaded file from: {download_url} \n to: {filename} ({count}/{total_files})")
             time.sleep(sleep_time)
