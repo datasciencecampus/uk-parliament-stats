@@ -4,10 +4,8 @@ import os
 
 import config
 
-savepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'rds'))
-url = 'https://storage.googleapis.com/harvard-dataverse/Corp_HouseOfCommons_V2.csv'
-
 def download_rds_file():
+    savepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'rds'))
     if config.file_size == 'All':
         url = 'https://storage.googleapis.com/harvard-dataverse/Corp_HouseOfCommons_V2.csv'
         path = os.path.join(os.path.join(savepath,f'Corp_HouseOfCommons_V2.csv'))
