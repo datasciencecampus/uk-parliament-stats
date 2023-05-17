@@ -8,9 +8,6 @@ from lxml import etree
 
 import config
 
-localpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'xml'))
-savepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'xml'))
-
 verbose = config.verbose
 
 def force_merge_id_structure(df):
@@ -44,11 +41,13 @@ def force_merge_id_structure(df):
 
 
 def save_to_csv(df):
+    savepath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'xml'))
     filename = os.path.join(savepath,f'xml_processed_id_{datetime.now().strftime("%Y%m%d_%H%M%S")}.csv')
     df.to_csv(filename)
     return filename
 
 def xml_file_list():
+    localpath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'xml'))
     matches = []
     sections = []
     for root, dirnames, filenames in os.walk(localpath):
