@@ -87,6 +87,8 @@ We are a small team and, while we aim to keep the package running, we have limit
 
 ## Acknowledgements
 
+This repository was first developed by [Rory Corbett](https://github.com/rorycorbett), before being picked up by the Data Science Campus, ONS.
+
 Data used to build and test this project comes from Harvard Dataverse (https://dataverse.harvard.edu/file.xhtml?persistentId=doi:10.7910/DVN/L4OAKN/W2SVMF&version=1.0). Due to the reliance of `R` for RDS files, we have converted this file to a CSV file ourselves and hosted on a server.
 
 ```Rauh, Christian; Schwalbach, Jan, 2020, "Corp_HouseOfCommons_V2.rds", The ParlSpeech V2 data set: Full-text corpora of 6.3 million parliamentary speeches in the key legislative chambers of nine representative democracies, https://doi.org/10.7910/DVN/L4OAKN/W2SVMF, Harvard Dataverse, V1```
