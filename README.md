@@ -61,6 +61,8 @@ Then run the analysis from the command line using:
 
 `python parlmentions.py`
 
+This produces a `.csv` containing all requested parliamentary speeches with metadata and a flag for whether the selected organisations are mentioned.
+
 ## Project Structure
 
 `/data` location for downloaded files <br> <br>
