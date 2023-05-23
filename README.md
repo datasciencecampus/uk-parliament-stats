@@ -61,6 +61,8 @@ Then run the analysis from the command line using:
 
 `python parlmentions.py`
 
+This produces a `.csv` containing all requested parliamentary speeches with metadata and a flag for whether the selected organisations are mentioned.
+
 ## Project Structure
 
 `/data` location for downloaded files <br> <br>
@@ -79,7 +81,13 @@ Then run the analysis from the command line using:
 `parlmentions.py` - file to run the pipeline <br> <br>
 `requirements.txt` - information about the package dependencies <br> <br>
 
+## Maintenance
+
+We are a small team and, while we aim to keep the package running, we have limited capacity for maintenance. If you come across any bugs or think of new features, consult the [contributing guidance](CONTRIBUTING.md) for how to best get involved.
+
 ## Acknowledgements
+
+This repository was first developed by [Rory Corbett](https://github.com/rorycorbett), before being picked up by the Data Science Campus, ONS.
 
 Data used to build and test this project comes from Harvard Dataverse (https://dataverse.harvard.edu/file.xhtml?persistentId=doi:10.7910/DVN/L4OAKN/W2SVMF&version=1.0). Due to the reliance of `R` for RDS files, we have converted this file to a CSV file ourselves and hosted on a server.
 
