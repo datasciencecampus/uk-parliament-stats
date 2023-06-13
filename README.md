@@ -24,7 +24,7 @@ If you have difficulties with this, a `.whl` for the model can be [manually down
 
 ### Proxy Setup
 
-The package includes functions to overcome difficulties that arise when using organisational proxy servers. The `config.py` has an option to turn this functionality on, `use_proxies`, as well as the filepath to look for a `proxies.json` file containing a list of possible proxies, `proxy_list_fp`. ONS colleagues can find a working copy of this file on [SharePoint](https://officenationalstatistics.sharepoint.com/sites/dscdsc/_layouts/15/download.aspx?UniqueId=042aa1d3ef804668aeb1200720dc683e&e=3crWBs). It is recommended to then put this file in a folder at the highest level of the repo called `/secrets/`.
+The package includes functions to overcome difficulties that arise when using organisational proxy servers. The `config.py` has an option to turn this functionality on, `use_proxies`, as well as the filepath to look for a `proxies.json` file containing a list of possible proxies, `proxy_list_fp`. ONS colleagues can request a copy of this file by contacting [Colin Daglish](mailto:colin.daglish@ons.gov.uk) subject: 'uk-parliament-stats repo proxies.json'. It is recommended to then put this file in a folder at the highest level of the repo called `/secrets/`.
 
 **NOTE:** we have not tested this functionality from within departments other than ONS, so results may vary depending on the permissiveness of the environment.
 
