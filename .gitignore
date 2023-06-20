@@ -1,0 +1,17 @@
+# Directories #
+jh-project-notes/
+.idea/*
+secrets/*
+
+# Data files #
+
+*.pyc
+*.rds
+*.csv
+*.xlsx
+*.xlsm
+*.xml
+*.tsv
+*.spacy
+*.hyper
+config.py
