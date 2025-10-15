@@ -1,3 +1,6 @@
+**📁 Repository Archived**
+This repository has been archived as part of ongoing changes to align with ONS GitHub usage policies. No further updates will be made.
+
 <img src="https://github.com/datasciencecampus/awesome-campus/blob/master/ons_dsc_logo.png">
 
 # parlmentions
